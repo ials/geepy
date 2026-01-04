@@ -4,12 +4,12 @@ project:
 
 book:
   title: "PyNotes GEE"
-  author: "Andres Patrignani"
-  date: "3/18/2024"
+  author: "Ivan  Lizarazo"
+  date: "01/06/2026"
   date-format: "long"
   cover-image: cover.jpg
   favicon: favicon.jpg
-  repo-url: https://github.com/soilwater/pynotes-gee
+  repo-url: https://github.com/ials/geepy
   repo-actions: [edit]
   downloads: [pdf]
   page-navigation: true
