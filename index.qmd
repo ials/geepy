@@ -56,7 +56,7 @@ You can try to install the packages in one go using: `pip install folium geopand
 
 ## About the author
 
-Ivan Lizarazo is an Associate Professor of Geoinformatics in the Department of Agronomy at Universidad Nacional de Colomboa. This tutorial is an adaptation of PyNotes written by Professor Andres Patrignani in the Department of Agronomy at KSU.
+Ivan Lizarazo is an Associate Professor of Geoinformatics in the Department of Agronomy at Universidad Nacional de Colombia. This tutorial is an adaptation of PyNotes written by Professor Andres Patrignani in the Department of Agronomy at KSU.
 
 
 
