@@ -1,0 +1,1068 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.33">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Ivan Lizarazo">
+<meta name="dcterms.date" content="2026-06-01">
+<meta name="keywords" content="gee, interactive maps, images, folium">
+
+<title>16&nbsp; Interactive maps – PyNotes GEE</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../notebooks/export_data.html" rel="prev">
+<link href="../favicon.jpg" rel="icon" type="image/jpeg">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-ffffa96520c6cf7ec6bfd4297e4347f0.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-9dc8595725c78020dbc2f67e060c4f36.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-H7B15Q02BW"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-H7B15Q02BW', { 'anonymize_ip': true});
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../notebooks/interactive_maps.html"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Interactive maps</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">PyNotes GEE</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/ials/geepy" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <a href="../PyNotes-GEE.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduction and setup</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Basic concepts</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notebooks/colormaps.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Colormaps</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notebooks/value_at_a_point.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Value at a point</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notebooks/value_at_multiple_points.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Value for multiple points</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notebooks/time_series_at_a_point.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Time series at a point</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notebooks/image_for_an_area.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Image for an area</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notebooks/reduce_image_collection_to_image.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Reduce collection to image</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notebooks/reduce_image_collection_to_timeseries.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Reduce collection to time series</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notebooks/use_my_vector_file.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Use my vector data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notebooks/band_computations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Band computations</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notebooks/animate_image_collection.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Animate image collection</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notebooks/integrate_with_geopandas.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Integrate with GeoPandas</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notebooks/unsupervised_classification.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Unsupervised classification</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notebooks/supervised_classification.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Supervised classification</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notebooks/export_data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Export data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notebooks/interactive_maps.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Interactive maps</span></span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#define-some-helper-functions" id="toc-define-some-helper-functions" class="nav-link active" data-scroll-target="#define-some-helper-functions">Define some helper functions</a></li>
+  <li><a href="#state-land-cover" id="toc-state-land-cover" class="nav-link" data-scroll-target="#state-land-cover">State land cover</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.dev/ials/geepy/blob/main/notebooks/interactive_maps.ipynb" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Interactive maps</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Ivan Lizarazo </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">June 1, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+<div>
+  <div class="keywords">
+    <div class="block-title">Keywords</div>
+    <p>gee, interactive maps, images, folium</p>
+  </div>
+</div>
+
+</header>
+
+
+<p>Interactive maps provide a dynamic user experience, allowing for real-time zooming, panning, and exploration of geospatial data layers. In contrast, Matplotlib’s static figures, while useful for publication-quality visuals, lack the ability to explore data or to easily integrate multiple layers of information. Additionally, interactive maps can be easily integrated withing websites and are ideal for collaborative projects and public dissemination of geospatial research findings.</p>
+<p>In this tutorial we will create an interactive map to explore different land covers across the state of Kansas. We will use the <code>folium</code> Python library, which is a wrapper around the popular Leaflet library implemented Javascript.</p>
+<p>In this tutorial we will learn:</p>
+<ul>
+<li>How to add raster layers to an interactive map</li>
+<li>How to add vector layers to an interactive map</li>
+</ul>
+<div id="4158b792-1a6f-4315-ae90-5edbd6de7826" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Import modules</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> ee</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> folium</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib <span class="im">import</span> colors, colormaps</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="define-some-helper-functions" class="level2">
+<h2 class="anchored" data-anchor-id="define-some-helper-functions">Define some helper functions</h2>
+<p>Let’s define some functions to avoid repeating the following code everytime we want to create a raster image or every time we want to specify a given colormap for our map.</p>
+<div id="84b35268-9eb1-4f77-8858-eabcb84e97f8" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_raster_map(ee_object, vis, name):</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Function that retrieves raster map from GEE and applies some style.</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="bu">isinstance</span>(ee_object, ee.Image):</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>        layer <span class="op">=</span> folium.TileLayer(ee_object.getMapId(vis)[<span class="st">'tile_fetcher'</span>].url_format,</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>                           name<span class="op">=</span>name,</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>                           overlay<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>                           control<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>                           attr<span class="op">=</span><span class="st">'Map Data &amp;copy; &lt;a href="https://earthengine.google.com/"&gt;Google Earth Engine&lt;/a&gt;'</span>)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> layer</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_vector_map(ee_object,vis,name):</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="co">    Function that retrieves vector map from GEE and applies some style.</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="bu">isinstance</span>(ee_object, ee.FeatureCollection):</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>        layer <span class="op">=</span> folium.GeoJson(ee_object.getInfo(),</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>                               name<span class="op">=</span>name,</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>                               style_function<span class="op">=</span><span class="kw">lambda</span> feature: {</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>                                   <span class="st">'fillColor'</span>: vis[<span class="st">'face_color'</span>],</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>                                   <span class="st">'color'</span>: vis[<span class="st">'edge_color'</span>],</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>                                   <span class="st">'weight'</span>: vis[<span class="st">'line_width'</span>]})</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> layer</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="fe8a3fc0-6b47-48b8-b8ac-9f4b8c924e36" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Trigger the authentication flow.</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>ee.Authenticate(auth_mode<span class="op">=</span><span class="st">'localhost'</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Initialize the library.</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>ee.Initialize(project<span class="op">=</span><span class="st">'ee-ializarazos'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p>To authorize access needed by Earth Engine, open the following
+        URL in a web browser and follow the instructions:</p>
+        <p><a href="https://accounts.google.com/o/oauth2/auth?client_id=517222506229-vsmmajv00ul0bs7p89v5m89qs8eb9359.apps.googleusercontent.com&amp;scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fearthengine+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcloud-platform+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fdrive+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fdevstorage.full_control&amp;redirect_uri=http%3A%2F%2Flocalhost%3A8085&amp;response_type=code&amp;code_challenge=nqns_vS_cdKuUxqrvyXIyR0kb7_r8YPRJDXT9Seihic&amp;code_challenge_method=S256">https://accounts.google.com/o/oauth2/auth?client_id=517222506229-vsmmajv00ul0bs7p89v5m89qs8eb9359.apps.googleusercontent.com&amp;scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fearthengine+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcloud-platform+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fdrive+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fdevstorage.full_control&amp;redirect_uri=http%3A%2F%2Flocalhost%3A8085&amp;response_type=code&amp;code_challenge=nqns_vS_cdKuUxqrvyXIyR0kb7_r8YPRJDXT9Seihic&amp;code_challenge_method=S256</a></p>
+        <p>Waiting for successful authorization from web browser ...</p>
+        
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Successfully saved authorization token.</code></pre>
+</div>
+</div>
+</section>
+<section id="state-land-cover" class="level2">
+<h2 class="anchored" data-anchor-id="state-land-cover">State land cover</h2>
+<div id="b659a29a-73a2-40bc-b34b-ae42cefec996" class="cell" data-execution_count="26">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Read US states</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>US_states <span class="op">=</span> ee.FeatureCollection(<span class="st">"TIGER/2018/States"</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Select Kansas</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>region <span class="op">=</span> US_states.<span class="bu">filter</span>(ee.Filter.inList(<span class="st">'NAME'</span>,[<span class="st">'Kansas'</span>]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="2f4d713f-6a45-4695-baa0-5553acaf2b3c" class="cell" data-execution_count="27">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Land use for 2021</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>land_use <span class="op">=</span> ee.ImageCollection(<span class="st">'USDA/NASS/CDL'</span>)<span class="op">\</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>             .<span class="bu">filter</span>(ee.Filter.date(<span class="st">'2020-01-01'</span>, <span class="st">'2021-12-31'</span>)).first().clip(region)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Select cropland layer</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>cropland <span class="op">=</span> land_use.select(<span class="st">'cropland'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="6bfeaef5-814b-455a-bf9e-6fd0f4761793" class="cell" data-execution_count="28">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get layer metadata</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>info <span class="op">=</span> cropland.getInfo()</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove comment to print the entire information (output is long!)</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co"># print(info)</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(info.keys())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>dict_keys(['type', 'bands', 'version', 'id', 'properties'])</code></pre>
+</div>
+</div>
+<div id="800f04db-cf60-4736-865d-cb0321cd2863" class="cell" data-execution_count="40">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get land cover names, values, and colors from metadata</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>class_names_str <span class="op">=</span> info[<span class="st">'properties'</span>][<span class="st">'cropland_class_names'</span>]</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>class_values_str <span class="op">=</span> info[<span class="st">'properties'</span>][<span class="st">'cropland_class_values'</span>]</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>class_colors_str <span class="op">=</span> info[<span class="st">'properties'</span>][<span class="st">'cropland_class_palette'</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="ebcc90a6-23ff-40cb-a3e2-ed5bd80d7423" class="cell" data-execution_count="41">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">type</span>(class_names_str), <span class="bu">type</span>(class_values_str), <span class="bu">type</span>(class_colors_str))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;class 'str'&gt; &lt;class 'str'&gt; &lt;class 'str'&gt;</code></pre>
+</div>
+</div>
+<div id="e2d002f3-c651-4a1f-b5c1-beac37ca7b5a" class="cell" data-execution_count="42">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>class_names <span class="op">=</span> [s.strip() <span class="cf">for</span> s <span class="kw">in</span> class_names_str.split(<span class="st">","</span>)]</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>class_values <span class="op">=</span> [<span class="bu">int</span>(s.strip()) <span class="cf">for</span> s <span class="kw">in</span> class_values_str.split(<span class="st">","</span>)]</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>class_colors <span class="op">=</span> [s.strip() <span class="cf">for</span> s <span class="kw">in</span> class_colors_str.split(<span class="st">","</span>)]</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">len</span>(class_names), <span class="bu">len</span>(class_values), <span class="bu">len</span>(class_colors))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>134 134 134</code></pre>
+</div>
+</div>
+<div id="36c92821-e547-4f3a-91ad-9cad6e2eac2c" class="cell" data-execution_count="44">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="bu">min</span>(<span class="bu">len</span>(class_names), <span class="bu">len</span>(class_values), <span class="bu">len</span>(class_colors))</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>class_props <span class="op">=</span> {</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    name: {<span class="st">"value"</span>: v, <span class="st">"color"</span>: c}</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> name, v, c <span class="kw">in</span> <span class="bu">zip</span>(class_names[:n], class_values[:n], class_colors[:n])</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="251b30dc-dad9-4595-856c-a4cd3e4f7d27" class="cell" data-execution_count="45">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>class_props</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="45">
+<pre><code>{'Background': {'value': 0, 'color': '000000'},
+ 'Corn': {'value': 1, 'color': 'ffd400'},
+ 'Cotton': {'value': 2, 'color': 'ff2626'},
+ 'Rice': {'value': 3, 'color': '00a9e6'},
+ 'Sorghum': {'value': 4, 'color': 'ff9e0f'},
+ 'Soybeans': {'value': 5, 'color': '267300'},
+ 'Sunflower': {'value': 6, 'color': 'ffff00'},
+ 'Peanuts': {'value': 10, 'color': '70a800'},
+ 'Tobacco': {'value': 11, 'color': '00af4d'},
+ 'Sweet Corn': {'value': 12, 'color': 'e0a60f'},
+ 'Pop or Orn Corn': {'value': 13, 'color': 'e0a60f'},
+ 'Mint': {'value': 14, 'color': '80d4ff'},
+ 'Barley': {'value': 21, 'color': 'e2007f'},
+ 'Durum Wheat': {'value': 22, 'color': '8a6453'},
+ 'Spring Wheat': {'value': 23, 'color': 'd9b56c'},
+ 'Winter Wheat': {'value': 24, 'color': 'a87000'},
+ 'Other Small Grains': {'value': 25, 'color': 'd69dbc'},
+ 'Dbl Crop WinWht/Soybeans': {'value': 26, 'color': '737300'},
+ 'Rye': {'value': 27, 'color': 'ae017e'},
+ 'Oats': {'value': 28, 'color': 'a15889'},
+ 'Millet': {'value': 29, 'color': '73004c'},
+ 'Speltz': {'value': 30, 'color': 'd69dbc'},
+ 'Canola': {'value': 31, 'color': 'd1ff00'},
+ 'Flaxseed': {'value': 32, 'color': '8099ff'},
+ 'Safflower': {'value': 33, 'color': 'd6d600'},
+ 'Rape Seed': {'value': 34, 'color': 'd1ff00'},
+ 'Mustard': {'value': 35, 'color': '00af4d'},
+ 'Alfalfa': {'value': 36, 'color': 'ffa8e3'},
+ 'Other Hay/Non Alfalfa': {'value': 37, 'color': 'a5f58d'},
+ 'Camelina': {'value': 38, 'color': '00af4d'},
+ 'Buckwheat': {'value': 39, 'color': 'd69dbc'},
+ 'Sugarbeets': {'value': 41, 'color': 'a900e6'},
+ 'Dry Beans': {'value': 42, 'color': 'a80000'},
+ 'Potatoes': {'value': 43, 'color': '732600'},
+ 'Other Crops': {'value': 44, 'color': '00af4d'},
+ 'Sugarcane': {'value': 45, 'color': 'b380ff'},
+ 'Sweet Potatoes': {'value': 46, 'color': '732600'},
+ 'Misc Vegs &amp; Fruits': {'value': 47, 'color': 'ff6666'},
+ 'Watermelons': {'value': 48, 'color': 'ff6666'},
+ 'Onions': {'value': 49, 'color': 'ffcc66'},
+ 'Cucumbers': {'value': 50, 'color': 'ff6666'},
+ 'Chick Peas': {'value': 51, 'color': '00af4d'},
+ 'Lentils': {'value': 52, 'color': '00deb0'},
+ 'Peas': {'value': 53, 'color': '55ff00'},
+ 'Tomatoes': {'value': 54, 'color': 'f5a27a'},
+ 'Caneberries': {'value': 55, 'color': 'ff6666'},
+ 'Hops': {'value': 56, 'color': '00af4d'},
+ 'Herbs': {'value': 57, 'color': '80d4ff'},
+ 'Clover/Wildflowers': {'value': 58, 'color': 'e8beff'},
+ 'Sod/Grass Seed': {'value': 59, 'color': 'b2ffde'},
+ 'Switchgrass': {'value': 60, 'color': '00af4d'},
+ 'Fallow/Idle Cropland': {'value': 61, 'color': 'bfbf7a'},
+ 'Forest': {'value': 63, 'color': '95ce93'},
+ 'Shrubland': {'value': 152, 'color': 'c7d79e'},
+ 'Barren': {'value': 131, 'color': 'ccbfa3'},
+ 'Cherries': {'value': 66, 'color': 'ff00ff'},
+ 'Peaches': {'value': 67, 'color': 'ff91ab'},
+ 'Apples': {'value': 68, 'color': 'b90050'},
+ 'Grapes': {'value': 69, 'color': '704489'},
+ 'Christmas Trees': {'value': 70, 'color': '007878'},
+ 'Other Tree Crops': {'value': 71, 'color': 'b39c70'},
+ 'Citrus': {'value': 72, 'color': 'ffff80'},
+ 'Pecans': {'value': 74, 'color': 'b6705c'},
+ 'Almonds': {'value': 75, 'color': '00a884'},
+ 'Walnuts': {'value': 76, 'color': 'ebd6b0'},
+ 'Pears': {'value': 77, 'color': 'b39c70'},
+ 'Clouds/No Data': {'value': 81, 'color': 'f7f7f7'},
+ 'Developed': {'value': 82, 'color': '9c9c9c'},
+ 'Water': {'value': 83, 'color': '4d70a3'},
+ 'Wetlands': {'value': 87, 'color': '80b3b3'},
+ 'Nonag/Undefined': {'value': 88, 'color': 'e9ffbe'},
+ 'Aquaculture': {'value': 92, 'color': '00ffff'},
+ 'Open Water': {'value': 111, 'color': '4d70a3'},
+ 'Perennial Ice/Snow': {'value': 112, 'color': 'd4e3fc'},
+ 'Developed/Open Space': {'value': 121, 'color': '9c9c9c'},
+ 'Developed/Low Intensity': {'value': 122, 'color': '9c9c9c'},
+ 'Developed/Med Intensity': {'value': 123, 'color': '9c9c9c'},
+ 'Developed/High Intensity': {'value': 124, 'color': '9c9c9c'},
+ 'Deciduous Forest': {'value': 141, 'color': '95ce93'},
+ 'Evergreen Forest': {'value': 142, 'color': '95ce93'},
+ 'Mixed Forest': {'value': 143, 'color': '95ce93'},
+ 'Grass/Pasture': {'value': 176, 'color': 'e9ffbe'},
+ 'Woody Wetlands': {'value': 190, 'color': '80b3b3'},
+ 'Herbaceous Wetlands': {'value': 195, 'color': '80b3b3'},
+ 'Pistachios': {'value': 204, 'color': '00ff8c'},
+ 'Triticale': {'value': 205, 'color': 'd69dbc'},
+ 'Carrots': {'value': 206, 'color': 'ff6666'},
+ 'Asparagus': {'value': 207, 'color': 'ff6666'},
+ 'Garlic': {'value': 208, 'color': 'ff6666'},
+ 'Cantaloupes': {'value': 209, 'color': 'ff6666'},
+ 'Prunes': {'value': 210, 'color': 'ff91ab'},
+ 'Olives': {'value': 211, 'color': '344a34'},
+ 'Oranges': {'value': 212, 'color': 'e67525'},
+ 'Honeydew Melons': {'value': 213, 'color': 'ff6666'},
+ 'Broccoli': {'value': 214, 'color': 'ff6666'},
+ 'Avocados': {'value': 215, 'color': '66994d'},
+ 'Peppers': {'value': 216, 'color': 'ff6666'},
+ 'Pomegranates': {'value': 217, 'color': 'b39c70'},
+ 'Nectarines': {'value': 218, 'color': 'ff91ab'},
+ 'Greens': {'value': 219, 'color': 'ff6666'},
+ 'Plums': {'value': 220, 'color': 'ff91ab'},
+ 'Strawberries': {'value': 221, 'color': 'ff6666'},
+ 'Squash': {'value': 222, 'color': 'ff6666'},
+ 'Apricots': {'value': 223, 'color': 'ff91ab'},
+ 'Vetch': {'value': 224, 'color': '00af4d'},
+ 'Dbl Crop WinWht/Corn': {'value': 225, 'color': 'ffd400'},
+ 'Dbl Crop Oats/Corn': {'value': 226, 'color': 'ffd400'},
+ 'Lettuce': {'value': 227, 'color': 'ff6666'},
+ 'Dbl Crop Triticale/Corn': {'value': 228, 'color': 'ffd400'},
+ 'Pumpkins': {'value': 229, 'color': 'ff6666'},
+ 'Dbl Crop Lettuce/Durum Wht': {'value': 230, 'color': '8a6453'},
+ 'Dbl Crop Lettuce/Cantaloupe': {'value': 231, 'color': 'ff6666'},
+ 'Dbl Crop Lettuce/Cotton': {'value': 232, 'color': 'ff2626'},
+ 'Dbl Crop Lettuce/Barley': {'value': 233, 'color': 'e2007f'},
+ 'Dbl Crop Durum Wht/Sorghum': {'value': 234, 'color': 'ff9e0f'},
+ 'Dbl Crop Barley/Sorghum': {'value': 235, 'color': 'ff9e0f'},
+ 'Dbl Crop WinWht/Sorghum': {'value': 236, 'color': 'a87000'},
+ 'Dbl Crop Barley/Corn': {'value': 237, 'color': 'ffd400'},
+ 'Dbl Crop WinWht/Cotton': {'value': 238, 'color': 'a87000'},
+ 'Dbl Crop Soybeans/Cotton': {'value': 239, 'color': '267300'},
+ 'Dbl Crop Soybeans/Oats': {'value': 240, 'color': '267300'},
+ 'Dbl Crop Corn/Soybeans': {'value': 241, 'color': 'ffd400'},
+ 'Blueberries': {'value': 242, 'color': '000099'},
+ 'Cabbage': {'value': 243, 'color': 'ff6666'},
+ 'Cauliflower': {'value': 244, 'color': 'ff6666'},
+ 'Celery': {'value': 245, 'color': 'ff6666'},
+ 'Radishes': {'value': 246, 'color': 'ff6666'},
+ 'Turnips': {'value': 247, 'color': 'ff6666'},
+ 'Eggplants': {'value': 248, 'color': 'ff6666'},
+ 'Gourds': {'value': 249, 'color': 'ff6666'},
+ 'Cranberries': {'value': 250, 'color': 'ff6666'},
+ 'Dbl Crop Barley/Soybeans': {'value': 254, 'color': '267300'}}</code></pre>
+</div>
+</div>
+<div id="eafa762a-c3c3-4903-99e2-1a1b827aa4ea" class="cell" data-execution_count="47">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create self masks for each land cover, so that only </span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="co"># the pixels for this land cover visible</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>corn <span class="op">=</span> cropland.eq(class_props[<span class="st">'Corn'</span>][<span class="st">'value'</span>]).selfMask()</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>sorghum <span class="op">=</span> cropland.eq(class_props[<span class="st">'Sorghum'</span>][<span class="st">'value'</span>]).selfMask()</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>soybeans <span class="op">=</span> cropland.eq(class_props[<span class="st">'Soybeans'</span>][<span class="st">'value'</span>]).selfMask()</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>wheat <span class="op">=</span> cropland.eq(class_props[<span class="st">'Winter Wheat'</span>][<span class="st">'value'</span>]).selfMask()</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>grassland <span class="op">=</span> cropland.eq(class_props[<span class="st">'Grass/Pasture'</span>][<span class="st">'value'</span>]).selfMask()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Since we created a dictionary using the name of the land cover class as the key, in the previous cell you can use Tab-autocompletion.</p>
+</div>
+</div>
+<div id="82eeb6af-7344-4ec5-b1de-525ebdd5e963" class="cell" data-execution_count="50">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Initialize map centered at a specific location and zoom level</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>m <span class="op">=</span> folium.Map(location<span class="op">=</span>[<span class="dv">38</span>, <span class="op">-</span><span class="dv">98</span>], zoom_start<span class="op">=</span><span class="dv">7</span>)</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>get_raster_map(corn, {<span class="st">'palette'</span>:[class_props[<span class="st">'Corn'</span>][<span class="st">'color'</span>]]}, <span class="st">'Corn'</span>).add_to(m)</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>get_raster_map(sorghum, {<span class="st">'palette'</span>:[class_props[<span class="st">'Sorghum'</span>][<span class="st">'color'</span>]]}, <span class="st">'Sorghum'</span>).add_to(m)</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>get_raster_map(soybeans, {<span class="st">'palette'</span>:[class_props[<span class="st">'Soybeans'</span>][<span class="st">'color'</span>]]}, <span class="st">'Soybeans'</span>).add_to(m)</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>get_raster_map(wheat, {<span class="st">'palette'</span>:[class_props[<span class="st">'Winter Wheat'</span>][<span class="st">'color'</span>]]}, <span class="st">'Wheat'</span>).add_to(m)</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>get_raster_map(grassland, {<span class="st">'palette'</span>:[class_props[<span class="st">'Grass/Pasture'</span>][<span class="st">'color'</span>]]}, <span class="st">'Grassland'</span>).add_to(m)</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Add vector layers</span></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>get_vector_map(region, vis<span class="op">=</span>{<span class="st">'face_color'</span>:<span class="st">'#00FFFF00'</span>,</span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>                     <span class="st">'edge_color'</span>:<span class="st">'black'</span>,</span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>                     <span class="st">'line_width'</span>:<span class="dv">2</span>}, name<span class="op">=</span><span class="st">'State boundary'</span>).add_to(m)</span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a><span class="co">#get_vector_map(counties, vis={'face_color':'#00FFFF00',</span></span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>                     <span class="co">#'edge_color':'grey',</span></span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>                     <span class="co">#'line_width':1}, name='County boundary').add_to(m)</span></span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Add a layer control panel to the map.</span></span>
+<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a>m.add_child(folium.LayerControl())</span>
+<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the map.</span></span>
+<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a>display(m)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-error">
+<div class="ansi-escaped-output">
+<pre><span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">NameError</span>                                 Traceback (most recent call last)
+<span class="ansi-cyan-fg">Cell</span><span class="ansi-cyan-fg"> </span><span class="ansi-green-fg">In[50]</span><span class="ansi-green-fg">, line 15</span>
+<span class="ansi-green-fg">     10</span> <span style="font-style:italic;color:rgb(95,135,135)"># Add vector layers</span>
+<span class="ansi-green-fg">     11</span> get_vector_map(region, vis={<span class="ansi-yellow-fg">'</span><span class="ansi-yellow-fg">face_color</span><span class="ansi-yellow-fg">'</span>:<span class="ansi-yellow-fg">'</span><span class="ansi-yellow-fg">#00FFFF00</span><span class="ansi-yellow-fg">'</span>,
+<span class="ansi-green-fg">     12</span>                      <span class="ansi-yellow-fg">'</span><span class="ansi-yellow-fg">edge_color</span><span class="ansi-yellow-fg">'</span>:<span class="ansi-yellow-fg">'</span><span class="ansi-yellow-fg">black</span><span class="ansi-yellow-fg">'</span>,
+<span class="ansi-green-fg">     13</span>                      <span class="ansi-yellow-fg">'</span><span class="ansi-yellow-fg">line_width</span><span class="ansi-yellow-fg">'</span>:<span class="ansi-green-fg">2</span>}, name=<span class="ansi-yellow-fg">'</span><span class="ansi-yellow-fg">State boundary</span><span class="ansi-yellow-fg">'</span>).add_to(m)
+<span class="ansi-green-fg">---&gt; </span><span class="ansi-green-fg">15</span> get_vector_map(<span class="ansi-yellow-bg">county</span>, vis={<span class="ansi-yellow-fg">'</span><span class="ansi-yellow-fg">face_color</span><span class="ansi-yellow-fg">'</span>:<span class="ansi-yellow-fg">'</span><span class="ansi-yellow-fg">#00FFFF00</span><span class="ansi-yellow-fg">'</span>,
+<span class="ansi-green-fg">     16</span>                      <span class="ansi-yellow-fg">'</span><span class="ansi-yellow-fg">edge_color</span><span class="ansi-yellow-fg">'</span>:<span class="ansi-yellow-fg">'</span><span class="ansi-yellow-fg">grey</span><span class="ansi-yellow-fg">'</span>,
+<span class="ansi-green-fg">     17</span>                      <span class="ansi-yellow-fg">'</span><span class="ansi-yellow-fg">line_width</span><span class="ansi-yellow-fg">'</span>:<span class="ansi-green-fg">1</span>}, name=<span class="ansi-yellow-fg">'</span><span class="ansi-yellow-fg">County boundary</span><span class="ansi-yellow-fg">'</span>).add_to(m)
+<span class="ansi-green-fg">     20</span> <span style="font-style:italic;color:rgb(95,135,135)"># Add a layer control panel to the map.</span>
+<span class="ansi-green-fg">     21</span> m.add_child(folium.LayerControl())
+
+<span class="ansi-red-fg">NameError</span>: name 'county' is not defined</pre>
+</div>
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../notebooks/export_data.html" class="pagination-link" aria-label="Export data">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Export data</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.dev/ials/geepy/blob/main/notebooks/interactive_maps.ipynb" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div></div></footer></body></html>
