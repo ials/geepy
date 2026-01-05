@@ -3,11 +3,11 @@ project:
   output-dir: docs
 
 book:
-  title: "PyNotes GEE"
+  title: "GEE Python"
   author: "Ivan  Lizarazo"
   date: "01/06/2026"
   date-format: "long"
-  cover-image: cover.jpg
+  cover-image: cover.png
   favicon: favicon.jpg
   repo-url: https://github.com/ials/geepy
   repo-actions: [edit]

@@ -41,7 +41,7 @@ The secret to understand GeoJSON objects is to pay attention to:
 4) the commas `,` that separate individual structures.
 :::
 
-The `.getInfo()` method in GEE allows you to print this information for any object in the notebook. You can also use the Pretty Print (`pprint`) module in Python to ensure the data is displayed clearly, like the example below. [This tutorial](https://soilwater.github.io/pynotes-gee/notebooks/value_at_a_point.html) will help you get started.
+The `.getInfo()` method in GEE allows you to print this information for any object in the notebook. You can also use the Pretty Print (`pprint`) module in Python to ensure the data is displayed clearly, like the example below. [This tutorial](https://ials.github.io/geepy/notebooks/value_at_a_point.html) will help you get started.
 
 ```
 {'columns': {'ALAND': 'Long',
