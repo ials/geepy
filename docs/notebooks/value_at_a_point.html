@@ -6,8 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Andres Patrignani and Joaquin Peraza">
-<meta name="dcterms.date" content="2024-01-26">
+<meta name="author" content="Ivan Lizarazo">
+<meta name="dcterms.date" content="2025-06-01">
 <meta name="keywords" content="gee, single value, point">
 
 <title>3&nbsp; Value at a point – GEE Python</title>
@@ -61,7 +61,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="../site_libs/quarto-nav/headroom.min.js"></script>
 <script src="../site_libs/clipboard/clipboard.min.js"></script>
 <script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
@@ -117,6 +117,9 @@ function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', 'G-H7B15Q02BW', { 'anonymize_ip': true});
 </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
 
 </head>
@@ -293,14 +296,14 @@ gtag('config', 'G-H7B15Q02BW', { 'anonymize_ip': true});
     <div>
     <div class="quarto-title-meta-heading">Author</div>
     <div class="quarto-title-meta-contents">
-             <p>Andres Patrignani and Joaquin Peraza </p>
+             <p>Ivan Lizarazo </p>
           </div>
   </div>
     
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">January 26, 2024</p>
+      <p class="date">June 1, 2025</p>
     </div>
   </div>
   
@@ -319,18 +322,29 @@ gtag('config', 'G-H7B15Q02BW', { 'anonymize_ip': true});
 
 
 <p>Perhaps, one of the simplest and most basic operations in Google Earth Engine is to retrieve information for a single point. Typical examples include elevation, mean annual temperature, and soil properties. In other words, this type of operations is mostly intended at retrieving information that does not change with time.</p>
-<div id="1e7fbf59-5516-4274-aaf0-980ed863a935" class="cell" data-execution_count="35">
+<div id="1e7fbf59-5516-4274-aaf0-980ed863a935" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Import modules</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> ee</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> datetime <span class="im">import</span> datetime</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pprint <span class="im">import</span> pprint</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="2883e3c1-7499-4fac-bf07-256e3a1965b6" class="cell" data-execution_count="41">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Authenticate</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>ee.Authenticate()</span>
+<div id="843f1f54-e3dd-47e1-8aa6-855a576b1dd3" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Trigger the authentication flow.</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>ee.Authenticate(auth_mode<span class="op">=</span><span class="st">'localhost'</span>)</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Initialize the library.</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>ee.Initialize()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>ee.Initialize(project<span class="op">=</span><span class="st">'ee-ializarazos'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p>To authorize access needed by Earth Engine, open the following
+        URL in a web browser and follow the instructions:</p>
+        <p><a href="https://accounts.google.com/o/oauth2/auth?client_id=517222506229-vsmmajv00ul0bs7p89v5m89qs8eb9359.apps.googleusercontent.com&amp;scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fearthengine+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcloud-platform+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fdrive+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fdevstorage.full_control&amp;redirect_uri=http%3A%2F%2Flocalhost%3A8085&amp;response_type=code&amp;code_challenge=9YFwWoKZTodMi2Ar3yQXSykYYUNTkq2HsAS0Sk6mxBk&amp;code_challenge_method=S256">https://accounts.google.com/o/oauth2/auth?client_id=517222506229-vsmmajv00ul0bs7p89v5m89qs8eb9359.apps.googleusercontent.com&amp;scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fearthengine+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcloud-platform+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fdrive+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fdevstorage.full_control&amp;redirect_uri=http%3A%2F%2Flocalhost%3A8085&amp;response_type=code&amp;code_challenge=9YFwWoKZTodMi2Ar3yQXSykYYUNTkq2HsAS0Sk6mxBk&amp;code_challenge_method=S256</a></p>
+        <p>Waiting for successful authorization from web browser ...</p>
+        
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Successfully saved authorization token.</code></pre>
+</div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -349,18 +363,20 @@ Tip
 <h2 class="anchored" data-anchor-id="example-1-elevation">Example 1: Elevation</h2>
 <p>In the following example we will retrieve the elevation for a specific point on Earth.</p>
 <p><strong>Product</strong>: USGS/SRTMGL1_003</p>
-<div id="3ac4d939-7466-414e-a912-33dece3fc8aa" class="cell" data-execution_count="15">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define geographic coordinates</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>lat <span class="op">=</span> <span class="fl">39.186512</span> <span class="co"># This is y</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>lon <span class="op">=</span> <span class="op">-</span><span class="fl">96.576844</span> <span class="co"># This is x</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert coordinates into a Point geometry following the x,y notation</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>point <span class="op">=</span> ee.Geometry.Point([lon, lat])</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Explore point geometry</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>point.getInfo()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="15">
-<pre><code>{'type': 'Point', 'coordinates': [-96.576844, 39.186512]}</code></pre>
+<div id="3ac4d939-7466-414e-a912-33dece3fc8aa" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define geographic coordinates</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Bucaramanga</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 7.1193° N, 73.1227° W</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>lat <span class="op">=</span> <span class="fl">7.1193</span> <span class="co"># This is y</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>lon <span class="op">=</span> <span class="op">-</span><span class="fl">73.1227</span> <span class="co"># This is x</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert coordinates into a Point geometry following the x,y notation</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>point <span class="op">=</span> ee.Geometry.Point([lon, lat])</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Explore point geometry</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>point.getInfo()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="3">
+<pre><code>{'type': 'Point', 'coordinates': [-73.1227, 7.1193]}</code></pre>
 </div>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -376,43 +392,168 @@ Note
 <p>In this tutorial we will use the <code>.getInfo()</code> method to print the underlying data and metadata of multiple objects, so that you can see the output and become more familiar with GEE data structures and the geoJSON format. This information is also valubale for debugging code errors. However, you don’t typically want to clutter your notebooks with these long outputs, so we will skip some of these steps in future tutorials.</p>
 </div>
 </div>
-<div id="1ef52271-7e96-4598-865a-7e244f7128e1" class="cell" data-execution_count="16">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load digital elevation model (DEM) from Shuttle Radar Topography Mission (SRTM) </span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>dem <span class="op">=</span> ee.Image(<span class="st">'USGS/SRTMGL1_003'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="1ef52271-7e96-4598-865a-7e244f7128e1" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load digital elevation model (DEM) from Shuttle Radar Topography Mission (SRTM) </span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>dem <span class="op">=</span> ee.Image(<span class="st">'USGS/SRTMGL1_003'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="e17fd910-8c4c-45bc-b610-01ad0a436c96" class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Obtain some information about the DEM layer (output is long!)</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>pprint(dem.getInfo())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="e17fd910-8c4c-45bc-b610-01ad0a436c96" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Obtain some information about the DEM layer (output is long!)</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>pprint(dem.getInfo())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>{'bands': [{'crs': 'EPSG:4326',
+            'crs_transform': [0.0002777777777777778,
+                              0,
+                              -180.0001388888889,
+                              0,
+                              -0.0002777777777777778,
+                              60.00013888888889],
+            'data_type': {'max': 32767,
+                          'min': -32768,
+                          'precision': 'int',
+                          'type': 'PixelType'},
+            'dimensions': [1296001, 417601],
+            'id': 'elevation'}],
+ 'id': 'USGS/SRTMGL1_003',
+ 'properties': {'date_range': [950227200000, 951177600000],
+                'description': '&lt;p&gt;The Shuttle Radar Topography Mission (SRTM, '
+                               'see &lt;a '
+                               'href="https://onlinelibrary.wiley.com/doi/10.1029/2005RG000183/full"&gt;Farr\n'
+                               'et al. 2007&lt;/a&gt;)\n'
+                               'digital elevation data is an international '
+                               'research effort that\n'
+                               'obtained digital elevation models on a '
+                               'near-global scale. This\n'
+                               'SRTM V3 product (SRTM Plus) is provided by '
+                               'NASA JPL\n'
+                               'at a resolution of 1 arc-second (approximately '
+                               '30m).&lt;/p&gt;&lt;p&gt;This dataset has undergone a '
+                               'void-filling process using open-source data\n'
+                               '(ASTER GDEM2, GMTED2010, and NED), as opposed '
+                               'to other versions that\n'
+                               'contain voids or have been void-filled with '
+                               'commercial sources.\n'
+                               'For more information on the different versions '
+                               'see the\n'
+                               '&lt;a '
+                               'href="https://lpdaac.usgs.gov/documents/13/SRTM_Quick_Guide.pdf"&gt;SRTM '
+                               'Quick '
+                               'Guide&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;Documentation:&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;p&gt;&lt;a '
+                               'href="https://lpdaac.usgs.gov/documents/179/SRTM_User_Guide_V3.pdf"&gt;User&amp;#39;s '
+                               'Guide&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;&lt;li&gt;&lt;p&gt;&lt;a '
+                               'href="https://lpdaac.usgs.gov/documents/13/SRTM_Quick_Guide.pdf"&gt;General '
+                               'Documentation&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;&lt;li&gt;&lt;p&gt;&lt;a '
+                               'href="https://doi.org/10.1029/2005RG000183"&gt;Algorithm '
+                               'Theoretical Basis Document '
+                               '(ATBD)&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;&lt;b&gt;Provider: &lt;a '
+                               'href="https://cmr.earthdata.nasa.gov/search/concepts/C1000000240-LPDAAC_ECS.html"&gt;NASA '
+                               '/ USGS / '
+                               'JPL-Caltech&lt;/a&gt;&lt;/b&gt;&lt;br&gt;&lt;p&gt;&lt;b&gt;Bands&lt;/b&gt;&lt;table '
+                               'class="eecat"&gt;&lt;tr&gt;&lt;th scope="col"&gt;Name&lt;/th&gt;&lt;th '
+                               'scope="col"&gt;Description&lt;/th&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;elevation&lt;/td&gt;&lt;td&gt;&lt;p&gt;Elevation&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;p&gt;&lt;b&gt;Terms '
+                               'of Use&lt;/b&gt;&lt;br&gt;&lt;p&gt;Unless otherwise noted, '
+                               'images and video on JPL public\n'
+                               'web sites (public sites ending with a '
+                               'jpl.nasa.gov address) may\n'
+                               'be used for any purpose without prior '
+                               'permission. For more information\n'
+                               'and exceptions visit the &lt;a '
+                               'href="https://www.jpl.nasa.gov/imagepolicy/"&gt;JPL '
+                               'Image Use Policy site&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;&lt;b&gt;Suggested '
+                               'citation(s)&lt;/b&gt;&lt;ul&gt;&lt;li&gt;&lt;p&gt;Farr, T.G., Rosen, '
+                               'P.A., Caro, E., Crippen, R., Duren, R., '
+                               'Hensley,\n'
+                               'S., Kobrick, M., Paller, M., Rodriguez, E., '
+                               'Roth, L., Seal, D.,\n'
+                               'Shaffer, S., Shimada, J., Umland, J., Werner, '
+                               'M., Oskin, M., Burbank,\n'
+                               'D., and Alsdorf, D.E., 2007, The shuttle radar '
+                               'topography mission:\n'
+                               'Reviews of Geophysics, v. 45, no. 2, RG2004, '
+                               'at\n'
+                               '&lt;a '
+                               'href="https://doi.org/10.1029/2005RG000183"&gt;https://doi.org/10.1029/2005RG000183&lt;/a&gt;.&lt;/p&gt;&lt;/li&gt;&lt;/ul&gt;&lt;style&gt;\n'
+                               '  table.eecat {\n'
+                               '  border: 1px solid black;\n'
+                               '  border-collapse: collapse;\n'
+                               '  font-size: 13px;\n'
+                               '  }\n'
+                               '  table.eecat td, tr, th {\n'
+                               '  text-align: left; vertical-align: top;\n'
+                               '  border: 1px solid gray; padding: 3px;\n'
+                               '  }\n'
+                               '  td.nobreak { white-space: nowrap; }\n'
+                               '&lt;/style&gt;',
+                'keywords': ['dem',
+                             'elevation',
+                             'geophysical',
+                             'nasa',
+                             'srtm',
+                             'topography',
+                             'usgs'],
+                'period': 0,
+                'product_tags': ['srtm',
+                                 'elevation',
+                                 'topography',
+                                 'dem',
+                                 'geophysical'],
+                'provider': 'NASA / USGS / JPL-Caltech',
+                'provider_url': 'https://cmr.earthdata.nasa.gov/search/concepts/C1000000240-LPDAAC_ECS.html',
+                'sample': 'https://mw1.google.com/ges/dd/images/SRTM90_V4_sample.png',
+                'source_tags': ['nasa', 'usgs'],
+                'system:asset_size': 132792638252,
+                'system:visualization_0_bands': 'elevation',
+                'system:visualization_0_gamma': '1.6',
+                'system:visualization_0_max': '6000.0',
+                'system:visualization_0_min': '0.0',
+                'system:visualization_0_name': 'Elevation',
+                'tags': ['dem',
+                         'elevation',
+                         'geophysical',
+                         'nasa',
+                         'srtm',
+                         'topography',
+                         'usgs'],
+                'thumb': 'https://mw1.google.com/ges/dd/images/SRTM90_V4_thumb.png',
+                'title': 'NASA SRTM Digital Elevation 30m',
+                'type_name': 'Image',
+                'visualization_0_bands': 'elevation',
+                'visualization_0_gamma': '1.6',
+                'visualization_0_max': '6000.0',
+                'visualization_0_min': '0.0',
+                'visualization_0_name': 'Elevation'},
+ 'type': 'Image',
+ 'version': 1641990767055141}</code></pre>
 </div>
-<div id="ffe56001-42a0-41b0-86d3-3b7ea9ebe393" class="cell" data-execution_count="18">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Retrieve the elevation value: This step will get us close to the answer, but we are not there yet</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>pprint(dem.sample(point, <span class="dv">1</span>).getInfo())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="ffe56001-42a0-41b0-86d3-3b7ea9ebe393" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Retrieve the elevation value: This step will get us close to the answer, but we are not there yet</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>pprint(dem.sample(point, <span class="dv">1</span>).getInfo())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>{'columns': {'elevation': 'Short'},
  'features': [{'geometry': None,
                'id': '0',
-               'properties': {'elevation': 317},
+               'properties': {'elevation': 967},
                'type': 'Feature'}],
  'properties': {'band_order': ['elevation']},
  'type': 'FeatureCollection'}</code></pre>
 </div>
 </div>
-<div id="a9c08474-f1e8-434e-a05c-9d650bbeca61" class="cell" data-execution_count="19">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Retrieve the elevation value: This step will get us even closer to the answer, but we are not there yet</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>dem.sample(point, <span class="dv">1</span>).first().getInfo()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="19">
+<div id="a9c08474-f1e8-434e-a05c-9d650bbeca61" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Retrieve the elevation value: This step will get us even closer to the answer, but we are not there yet</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>dem.sample(point, <span class="dv">1</span>).first().getInfo()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="7">
 <pre><code>{'type': 'Feature',
  'geometry': None,
  'id': '0',
- 'properties': {'elevation': 317}}</code></pre>
+ 'properties': {'elevation': 967}}</code></pre>
 </div>
 </div>
-<div id="bc0fe7ba-2b20-48b2-a7a0-7a228b309f73" class="cell" data-execution_count="20">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Retrieve the elevation value: This step will get us the correct value</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>elev <span class="op">=</span> dem.sample(point, <span class="dv">1</span>).first().getNumber(<span class="st">'elevation'</span>).getInfo()</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Elevation: </span><span class="sc">{</span>elev<span class="sc">}</span><span class="ss"> m'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="bc0fe7ba-2b20-48b2-a7a0-7a228b309f73" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Retrieve the elevation value: This step will get us the correct value</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>elev <span class="op">=</span> dem.sample(point, <span class="dv">1</span>).first().getNumber(<span class="st">'elevation'</span>).getInfo()</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Elevation: </span><span class="sc">{</span>elev<span class="sc">}</span><span class="ss"> m'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Elevation: 317 m</code></pre>
+<pre><code>Elevation: 967 m</code></pre>
 </div>
 </div>
 </section>
@@ -420,36 +561,298 @@ Note
 <h2 class="anchored" data-anchor-id="example-2-weather-variables">Example 2: Weather variables</h2>
 <p>Obtain the long-term mean annual air temperature and precipitation for a specific location</p>
 <p><strong>Product</strong>: For more information about bands and units visit: <a href="https://developers.google.com/earth-engine/datasets/catalog/WORLDCLIM_V1_BIO">WorldClim BIO</a></p>
-<div id="77ade073-b016-45bc-a345-2c3b10d900c6" class="cell" data-execution_count="21">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define geographic coordinates</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>lat <span class="op">=</span> <span class="fl">39.186512</span> <span class="co"># This is y</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>lon <span class="op">=</span> <span class="op">-</span><span class="fl">96.576844</span> <span class="co"># This is x</span></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert coordinates into a Point geometry following the x,y notation</span></span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>point <span class="op">=</span> ee.Geometry.Point(lon, lat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="f312672b-a4a4-4d15-93ee-dffe7cbcd705" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load WorldClim BIO dataset</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>dataset <span class="op">=</span> ee.Image(<span class="st">'WORLDCLIM/V1/BIO'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="f312672b-a4a4-4d15-93ee-dffe7cbcd705" class="cell" data-execution_count="22">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load WorldClim BIO dataset</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>dataset <span class="op">=</span> ee.Image(<span class="st">'WORLDCLIM/V1/BIO'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="1a4805d3-d383-46c7-ba9d-1065ef87d9a0" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Access metadata of the product (output is long!)</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>dataset.getInfo()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="10">
+<pre><code>{'type': 'Image',
+ 'bands': [{'id': 'bio01',
+   'data_type': {'type': 'PixelType', 'precision': 'float'},
+   'dimensions': [43200, 18000],
+   'crs': 'EPSG:4326',
+   'crs_transform': [0.008333333333333333,
+    0,
+    -180,
+    0,
+    -0.008333333333333333,
+    90]},
+  {'id': 'bio02',
+   'data_type': {'type': 'PixelType', 'precision': 'float'},
+   'dimensions': [43200, 18000],
+   'crs': 'EPSG:4326',
+   'crs_transform': [0.008333333333333333,
+    0,
+    -180,
+    0,
+    -0.008333333333333333,
+    90]},
+  {'id': 'bio03',
+   'data_type': {'type': 'PixelType', 'precision': 'float'},
+   'dimensions': [43200, 18000],
+   'crs': 'EPSG:4326',
+   'crs_transform': [0.008333333333333333,
+    0,
+    -180,
+    0,
+    -0.008333333333333333,
+    90]},
+  {'id': 'bio04',
+   'data_type': {'type': 'PixelType', 'precision': 'float'},
+   'dimensions': [43200, 18000],
+   'crs': 'EPSG:4326',
+   'crs_transform': [0.008333333333333333,
+    0,
+    -180,
+    0,
+    -0.008333333333333333,
+    90]},
+  {'id': 'bio05',
+   'data_type': {'type': 'PixelType', 'precision': 'float'},
+   'dimensions': [43200, 18000],
+   'crs': 'EPSG:4326',
+   'crs_transform': [0.008333333333333333,
+    0,
+    -180,
+    0,
+    -0.008333333333333333,
+    90]},
+  {'id': 'bio06',
+   'data_type': {'type': 'PixelType', 'precision': 'float'},
+   'dimensions': [43200, 18000],
+   'crs': 'EPSG:4326',
+   'crs_transform': [0.008333333333333333,
+    0,
+    -180,
+    0,
+    -0.008333333333333333,
+    90]},
+  {'id': 'bio07',
+   'data_type': {'type': 'PixelType', 'precision': 'float'},
+   'dimensions': [43200, 18000],
+   'crs': 'EPSG:4326',
+   'crs_transform': [0.008333333333333333,
+    0,
+    -180,
+    0,
+    -0.008333333333333333,
+    90]},
+  {'id': 'bio08',
+   'data_type': {'type': 'PixelType', 'precision': 'float'},
+   'dimensions': [43200, 18000],
+   'crs': 'EPSG:4326',
+   'crs_transform': [0.008333333333333333,
+    0,
+    -180,
+    0,
+    -0.008333333333333333,
+    90]},
+  {'id': 'bio09',
+   'data_type': {'type': 'PixelType', 'precision': 'float'},
+   'dimensions': [43200, 18000],
+   'crs': 'EPSG:4326',
+   'crs_transform': [0.008333333333333333,
+    0,
+    -180,
+    0,
+    -0.008333333333333333,
+    90]},
+  {'id': 'bio10',
+   'data_type': {'type': 'PixelType', 'precision': 'float'},
+   'dimensions': [43200, 18000],
+   'crs': 'EPSG:4326',
+   'crs_transform': [0.008333333333333333,
+    0,
+    -180,
+    0,
+    -0.008333333333333333,
+    90]},
+  {'id': 'bio11',
+   'data_type': {'type': 'PixelType', 'precision': 'float'},
+   'dimensions': [43200, 18000],
+   'crs': 'EPSG:4326',
+   'crs_transform': [0.008333333333333333,
+    0,
+    -180,
+    0,
+    -0.008333333333333333,
+    90]},
+  {'id': 'bio12',
+   'data_type': {'type': 'PixelType', 'precision': 'float'},
+   'dimensions': [43200, 18000],
+   'crs': 'EPSG:4326',
+   'crs_transform': [0.008333333333333333,
+    0,
+    -180,
+    0,
+    -0.008333333333333333,
+    90]},
+  {'id': 'bio13',
+   'data_type': {'type': 'PixelType', 'precision': 'float'},
+   'dimensions': [43200, 18000],
+   'crs': 'EPSG:4326',
+   'crs_transform': [0.008333333333333333,
+    0,
+    -180,
+    0,
+    -0.008333333333333333,
+    90]},
+  {'id': 'bio14',
+   'data_type': {'type': 'PixelType', 'precision': 'float'},
+   'dimensions': [43200, 18000],
+   'crs': 'EPSG:4326',
+   'crs_transform': [0.008333333333333333,
+    0,
+    -180,
+    0,
+    -0.008333333333333333,
+    90]},
+  {'id': 'bio15',
+   'data_type': {'type': 'PixelType', 'precision': 'float'},
+   'dimensions': [43200, 18000],
+   'crs': 'EPSG:4326',
+   'crs_transform': [0.008333333333333333,
+    0,
+    -180,
+    0,
+    -0.008333333333333333,
+    90]},
+  {'id': 'bio16',
+   'data_type': {'type': 'PixelType', 'precision': 'float'},
+   'dimensions': [43200, 18000],
+   'crs': 'EPSG:4326',
+   'crs_transform': [0.008333333333333333,
+    0,
+    -180,
+    0,
+    -0.008333333333333333,
+    90]},
+  {'id': 'bio17',
+   'data_type': {'type': 'PixelType', 'precision': 'float'},
+   'dimensions': [43200, 18000],
+   'crs': 'EPSG:4326',
+   'crs_transform': [0.008333333333333333,
+    0,
+    -180,
+    0,
+    -0.008333333333333333,
+    90]},
+  {'id': 'bio18',
+   'data_type': {'type': 'PixelType', 'precision': 'float'},
+   'dimensions': [43200, 18000],
+   'crs': 'EPSG:4326',
+   'crs_transform': [0.008333333333333333,
+    0,
+    -180,
+    0,
+    -0.008333333333333333,
+    90]},
+  {'id': 'bio19',
+   'data_type': {'type': 'PixelType', 'precision': 'float'},
+   'dimensions': [43200, 18000],
+   'crs': 'EPSG:4326',
+   'crs_transform': [0.008333333333333333,
+    0,
+    -180,
+    0,
+    -0.008333333333333333,
+    90]}],
+ 'version': 1641990778282015,
+ 'id': 'WORLDCLIM/V1/BIO',
+ 'properties': {'system:visualization_0_min': '-230.0',
+  'type_name': 'Image',
+  'keywords': ['berkeley',
+   'bioclim',
+   'climate',
+   'coldest',
+   'diurnal',
+   'driest',
+   'isothermality',
+   'monthly',
+   'precipitation',
+   'seasonality',
+   'temperature',
+   'ucb',
+   'warmest',
+   'weather',
+   'wettest',
+   'worldclim'],
+  'thumb': 'https://mw1.google.com/ges/dd/images/WORLDCLIM_V1_BIO_thumb.png',
+  'description': '&lt;p&gt;WorldClim V1 Bioclim provides bioclimatic variables that are derived from\nthe monthly temperature and rainfall in order to generate more biologically\nmeaningful values.&lt;/p&gt;&lt;p&gt;The bioclimatic variables represent annual trends (e.g., mean annual\ntemperature, annual precipitation), seasonality (e.g., annual range in\ntemperature and precipitation), and extreme or limiting environmental\nfactors (e.g., temperature of the coldest and warmest month, and\nprecipitation of the wet and dry quarters).&lt;/p&gt;&lt;p&gt;The bands scheme follows that of ANUCLIM, except that for temperature\nseasonality the standard deviation was used because a coefficient of\nvariation does not make sense with temperatures between -1 and 1.&lt;/p&gt;&lt;p&gt;WorldClim version 1 was developed by Robert J. Hijmans, Susan Cameron,\nand Juan Parra, at the Museum of Vertebrate Zoology, University of\nCalifornia, Berkeley, in collaboration with Peter Jones and Andrew Jarvis\n(CIAT), and with Karen Richardson (Rainforest CRC).&lt;/p&gt;&lt;p&gt;&lt;b&gt;Provider: &lt;a href="https://www.worldclim.org/"&gt;University of California, Berkeley&lt;/a&gt;&lt;/b&gt;&lt;br&gt;&lt;p&gt;&lt;b&gt;Resolution&lt;/b&gt;&lt;br&gt;927.67 meters\n&lt;/p&gt;&lt;p&gt;&lt;b&gt;Bands&lt;/b&gt;&lt;table class="eecat"&gt;&lt;tr&gt;&lt;th scope="col"&gt;Name&lt;/th&gt;&lt;th scope="col"&gt;Description&lt;/th&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;bio01&lt;/td&gt;&lt;td&gt;&lt;p&gt;Annual mean temperature&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;bio02&lt;/td&gt;&lt;td&gt;&lt;p&gt;Mean diurnal range (mean of monthly (max temp - min temp))&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;bio03&lt;/td&gt;&lt;td&gt;&lt;p&gt;Isothermality (bio02/bio07)&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;bio04&lt;/td&gt;&lt;td&gt;&lt;p&gt;Temperature seasonality (Standard deviation * 100)&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;bio05&lt;/td&gt;&lt;td&gt;&lt;p&gt;Max temperature of warmest month&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;bio06&lt;/td&gt;&lt;td&gt;&lt;p&gt;Min temperature of coldest month&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;bio07&lt;/td&gt;&lt;td&gt;&lt;p&gt;Temperature annual range (bio05-bio06)&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;bio08&lt;/td&gt;&lt;td&gt;&lt;p&gt;Mean temperature of wettest quarter&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;bio09&lt;/td&gt;&lt;td&gt;&lt;p&gt;Mean temperature of driest quarter&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;bio10&lt;/td&gt;&lt;td&gt;&lt;p&gt;Mean temperature of warmest quarter&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;bio11&lt;/td&gt;&lt;td&gt;&lt;p&gt;Mean temperature of coldest quarter&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;bio12&lt;/td&gt;&lt;td&gt;&lt;p&gt;Annual precipitation&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;bio13&lt;/td&gt;&lt;td&gt;&lt;p&gt;Precipitation of wettest month&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;bio14&lt;/td&gt;&lt;td&gt;&lt;p&gt;Precipitation of driest month&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;bio15&lt;/td&gt;&lt;td&gt;&lt;p&gt;Precipitation seasonality&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;bio16&lt;/td&gt;&lt;td&gt;&lt;p&gt;Precipitation of wettest quarter&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;bio17&lt;/td&gt;&lt;td&gt;&lt;p&gt;Precipitation of driest quarter&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;bio18&lt;/td&gt;&lt;td&gt;&lt;p&gt;Precipitation of warmest quarter&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;bio19&lt;/td&gt;&lt;td&gt;&lt;p&gt;Precipitation of coldest quarter&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;p&gt;&lt;b&gt;Terms of Use&lt;/b&gt;&lt;br&gt;&lt;p&gt;Licensed under the Creative Commons Attribution Share Alike 4.0 International License.&lt;/p&gt;&lt;p&gt;&lt;b&gt;Suggested citation(s)&lt;/b&gt;&lt;ul&gt;&lt;li&gt;&lt;p&gt;Hijmans, R.J., S.E. Cameron, J.L. Parra, P.G. Jones and A. Jarvis,\n2005. Very High Resolution Interpolated Climate Surfaces for Global Land\nAreas. International Journal of Climatology 25: 1965-1978.\n&lt;a href="https://doi.org/10.1002/joc.1276"&gt;doi:10.1002/joc.1276&lt;/a&gt;.&lt;/p&gt;&lt;/li&gt;&lt;/ul&gt;&lt;style&gt;\n  table.eecat {\n  border: 1px solid black;\n  border-collapse: collapse;\n  font-size: 13px;\n  }\n  table.eecat td, tr, th {\n  text-align: left; vertical-align: top;\n  border: 1px solid gray; padding: 3px;\n  }\n  td.nobreak { white-space: nowrap; }\n&lt;/style&gt;',
+  'source_tags': ['ucb', 'berkeley'],
+  'visualization_0_max': '300.0',
+  'title': 'WorldClim BIO Variables V1',
+  'product_tags': ['worldclim',
+   'weather',
+   'monthly',
+   'climate',
+   'temperature',
+   'precipitation',
+   'bioclim',
+   'temperature',
+   'precipitation',
+   'diurnal',
+   'warmest',
+   'coldest',
+   'wettest',
+   'driest',
+   'seasonality',
+   'isothermality'],
+  'provider': 'University of California, Berkeley',
+  'system:footprint': {'type': 'LinearRing',
+   'coordinates': [[-180, -90],
+    [180, -90],
+    [180, 90],
+    [-180, 90],
+    [-180, -90]]},
+  'visualization_0_min': '-230.0',
+  'visualization_0_name': 'Annual Mean Temperature',
+  'date_range': [-315619200000, 662688000000],
+  'period': 0,
+  'system:visualization_0_bands': 'bio01',
+  'provider_url': 'https://www.worldclim.org/',
+  'sample': 'https://mw1.google.com/ges/dd/images/WORLDCLIM_V1_BIO_sample.png',
+  'tags': ['berkeley',
+   'bioclim',
+   'climate',
+   'coldest',
+   'diurnal',
+   'driest',
+   'isothermality',
+   'monthly',
+   'precipitation',
+   'seasonality',
+   'temperature',
+   'ucb',
+   'warmest',
+   'weather',
+   'wettest',
+   'worldclim'],
+  'system:visualization_0_max': '300.0',
+  'visualization_0_palette': 'blue,purple,cyan,green,yellow,red',
+  'system:visualization_0_palette': 'blue,purple,cyan,green,yellow,red',
+  'system:visualization_0_name': 'Annual Mean Temperature',
+  'system:asset_size': 3398569467,
+  'visualization_0_bands': 'bio01'}}</code></pre>
 </div>
-<div id="1a4805d3-d383-46c7-ba9d-1065ef87d9a0" class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Access metadata of the product (output is long!)</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>dataset.getInfo()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="832cb2f7-6c41-4eae-b4c7-e09536ec99ed" class="cell" data-execution_count="24">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get long-term mean annual air temperature</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>T_mean <span class="op">=</span> dataset.select(<span class="st">'bio01'</span>).sample(point,<span class="dv">1</span>).first().getNumber(<span class="st">'bio01'</span>).multiply(<span class="fl">0.1</span>).getInfo()</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Mean annual air temperature: </span><span class="sc">{</span><span class="bu">round</span>(T_mean,<span class="dv">1</span>)<span class="sc">}</span><span class="ss"> Celsius'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="832cb2f7-6c41-4eae-b4c7-e09536ec99ed" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get long-term mean annual air temperature</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>T_mean <span class="op">=</span> dataset.select(<span class="st">'bio01'</span>).sample(point,<span class="dv">1</span>).first().getNumber(<span class="st">'bio01'</span>).multiply(<span class="fl">0.1</span>).getInfo()</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Mean annual air temperature: </span><span class="sc">{</span><span class="bu">round</span>(T_mean,<span class="dv">1</span>)<span class="sc">}</span><span class="ss"> Celsius'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Mean annual air temperature: 12.2 Celsius</code></pre>
+<pre><code>Mean annual air temperature: 23.3 Celsius</code></pre>
 </div>
 </div>
-<div id="6222126b-989d-4c0e-bcf9-53b75db472b1" class="cell" data-execution_count="25">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get long-term annual precipitation</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>P_annual <span class="op">=</span> dataset.select(<span class="st">'bio12'</span>).sample(point,<span class="dv">1</span>).first().get(<span class="st">'bio12'</span>).getInfo()</span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Mean annual precipitation: </span><span class="sc">{</span><span class="bu">round</span>(P_annual,<span class="dv">1</span>)<span class="sc">}</span><span class="ss"> mm'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="6222126b-989d-4c0e-bcf9-53b75db472b1" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get long-term annual precipitation</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>P_annual <span class="op">=</span> dataset.select(<span class="st">'bio12'</span>).sample(point,<span class="dv">1</span>).first().get(<span class="st">'bio12'</span>).getInfo()</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Mean annual precipitation: </span><span class="sc">{</span><span class="bu">round</span>(P_annual,<span class="dv">1</span>)<span class="sc">}</span><span class="ss"> mm'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Mean annual precipitation: 857 mm</code></pre>
+<pre><code>Mean annual precipitation: 1176 mm</code></pre>
 </div>
 </div>
 </section>
@@ -457,123 +860,1037 @@ Note
 <h2 class="anchored" data-anchor-id="example-3-reference-et">Example 3: Reference ET</h2>
 <p>In this example we will retrieve daily values of reference evapotranspiration for a point.</p>
 <p><strong>Product</strong>: For more information visit the description in Google Earth Engine of <a href="https://developers.google.com/earth-engine/datasets/catalog/IDAHO_EPSCOR_GRIDMET?hl=en">GRIDMET</a></p>
-<div id="5fd5f892-af27-42af-8a37-75f1f6bc28f9" class="cell" data-execution_count="26">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define point</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>point <span class="op">=</span> ee.Geometry.Point([<span class="op">-</span><span class="fl">96.576844</span>, <span class="fl">39.186512</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="85e3292c-1bec-4146-9ebd-8b7b5cd44f16" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Obtain GRIDMET dataset for a specific period. End date is excluded from the call</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>start_date <span class="op">=</span> ee.Date(<span class="st">'2022-12-01'</span>)</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>end_date <span class="op">=</span> ee.Date(<span class="st">'2023-01-01'</span>)</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>day_of_interest <span class="op">=</span> ee.Date(<span class="st">'2023-12-15'</span>)</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>dataset <span class="op">=</span> ee.ImageCollection(<span class="st">"FAO/WAPOR/2/L1_RET_E"</span>).filterDate(start_date, end_date)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="85e3292c-1bec-4146-9ebd-8b7b5cd44f16" class="cell" data-execution_count="27">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Obtain GRIDMET dataset for a specific period. End date is excluded from the call</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>start_date <span class="op">=</span> ee.Date(<span class="st">'2022-07-01'</span>)</span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>end_date <span class="op">=</span> ee.Date(<span class="st">'2022-07-02'</span>)</span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>day_of_interest <span class="op">=</span> ee.Date(<span class="st">'2022-03-15'</span>)</span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>dataset <span class="op">=</span> ee.ImageCollection(<span class="st">'IDAHO_EPSCOR/GRIDMET'</span>).filterDate(start_date, end_date)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div id="a1c9b4e8-bfc9-460d-89f3-773f08b480a7" class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Information about image collection</span></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>pprint(dataset.getInfo())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div id="e4a9a5ed-fcde-4cba-a40e-239df36ba755" class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Use the get methog to retrieve a specific property</span></span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>dataset.get(<span class="st">'description'</span>).getInfo()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div id="1a81d8b0-1cca-4296-8966-62e7cd30aac5" class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Information about first image within the collection (output is long!)</span></span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>dataset.first().getInfo()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div id="4080f919-11b1-487a-bb46-2c84085e3298" class="cell" data-execution_count="7">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Information about feature collection</span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>dataset.first().sample(point,<span class="dv">1</span>).getInfo() <span class="co"># Sample at 1 meter resolution</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="7">
-<pre><code>{'type': 'FeatureCollection',
- 'columns': {'bi': 'Float',
-  'erc': 'Float',
-  'eto': 'Float',
-  'etr': 'Float',
-  'fm100': 'Float',
-  'fm1000': 'Float',
-  'pr': 'Float',
-  'rmax': 'Float',
-  'rmin': 'Float',
-  'sph': 'Float',
-  'srad': 'Float',
-  'th': 'Float',
-  'tmmn': 'Float',
-  'tmmx': 'Float',
-  'vpd': 'Float',
-  'vs': 'Float'},
- 'properties': {'band_order': ['pr',
-   'rmax',
-   'rmin',
-   'sph',
-   'srad',
-   'th',
-   'tmmn',
-   'tmmx',
-   'vs',
-   'erc',
-   'eto',
-   'bi',
-   'fm100',
-   'fm1000',
-   'etr',
-   'vpd']},
- 'features': [{'type': 'Feature',
-   'geometry': None,
-   'id': '0',
-   'properties': {'bi': 0,
-    'erc': 20,
-    'eto': 4.5,
-    'etr': 5.300000190734863,
-    'fm100': 14.899999618530273,
-    'fm1000': 17.799999237060547,
-    'pr': 43.70000076293945,
-    'rmax': 90.9000015258789,
-    'rmin': 60.20000076293945,
-    'sph': 0.014340000227093697,
-    'srad': 249.39999389648438,
-    'th': 114,
-    'tmmn': 293.70001220703125,
-    'tmmx': 300.1000061035156,
-    'vpd': 0.7300000190734863,
-    'vs': 2.799999952316284}}]}</code></pre>
-</div>
-</div>
-<div id="2e8987e4-ca35-4f27-9332-057fa8ad3175" class="cell" data-execution_count="31">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Information about feature</span></span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>eto <span class="op">=</span> dataset.first().sample(point,<span class="dv">1</span>).first().getNumber(<span class="st">'eto'</span>).getInfo()</span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'The grass reference ET is </span><span class="sc">{</span>eto<span class="sc">}</span><span class="ss"> mm'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="a1c9b4e8-bfc9-460d-89f3-773f08b480a7" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Information about image collection</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>pprint(dataset.getInfo())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>The grass reference ET is 4.400000095367432 mm</code></pre>
+<pre><code>{'bands': [],
+ 'features': [{'bands': [{'crs': 'EPSG:4326',
+                          'crs_transform': [0.178571,
+                                            0,
+                                            -179.8255333,
+                                            0,
+                                            -0.178571,
+                                            60.0044163],
+                          'data_type': {'max': 255,
+                                        'min': 0,
+                                        'precision': 'int',
+                                        'type': 'PixelType'},
+                          'dimensions': [2015, 673],
+                          'id': 'L1_RET_E'}],
+               'id': 'FAO/WAPOR/2/L1_RET_E/L1_RET_221201',
+               'properties': {'system:asset_size': 79472,
+                              'system:footprint': {'coordinates': [[-180, -90],
+                                                                   [180, -90],
+                                                                   [180, 90],
+                                                                   [-180, 90],
+                                                                   [-180, -90]],
+                                                   'type': 'LinearRing'},
+                              'system:index': 'L1_RET_221201',
+                              'system:time_end': 1669852800000,
+                              'system:time_start': 1669852800000},
+               'type': 'Image',
+               'version': 1677333077102453},
+              {'bands': [{'crs': 'EPSG:4326',
+                          'crs_transform': [0.178571,
+                                            0,
+                                            -179.8255333,
+                                            0,
+                                            -0.178571,
+                                            60.0044163],
+                          'data_type': {'max': 255,
+                                        'min': 0,
+                                        'precision': 'int',
+                                        'type': 'PixelType'},
+                          'dimensions': [2015, 673],
+                          'id': 'L1_RET_E'}],
+               'id': 'FAO/WAPOR/2/L1_RET_E/L1_RET_221202',
+               'properties': {'system:asset_size': 79454,
+                              'system:footprint': {'coordinates': [[-180, -90],
+                                                                   [180, -90],
+                                                                   [180, 90],
+                                                                   [-180, 90],
+                                                                   [-180, -90]],
+                                                   'type': 'LinearRing'},
+                              'system:index': 'L1_RET_221202',
+                              'system:time_end': 1669939200000,
+                              'system:time_start': 1669939200000},
+               'type': 'Image',
+               'version': 1677333077209252},
+              {'bands': [{'crs': 'EPSG:4326',
+                          'crs_transform': [0.178571,
+                                            0,
+                                            -179.8255333,
+                                            0,
+                                            -0.178571,
+                                            60.0044163],
+                          'data_type': {'max': 255,
+                                        'min': 0,
+                                        'precision': 'int',
+                                        'type': 'PixelType'},
+                          'dimensions': [2015, 673],
+                          'id': 'L1_RET_E'}],
+               'id': 'FAO/WAPOR/2/L1_RET_E/L1_RET_221203',
+               'properties': {'system:asset_size': 78968,
+                              'system:footprint': {'coordinates': [[-180, -90],
+                                                                   [180, -90],
+                                                                   [180, 90],
+                                                                   [-180, 90],
+                                                                   [-180, -90]],
+                                                   'type': 'LinearRing'},
+                              'system:index': 'L1_RET_221203',
+                              'system:time_end': 1670025600000,
+                              'system:time_start': 1670025600000},
+               'type': 'Image',
+               'version': 1677333077317745},
+              {'bands': [{'crs': 'EPSG:4326',
+                          'crs_transform': [0.178571,
+                                            0,
+                                            -179.8255333,
+                                            0,
+                                            -0.178571,
+                                            60.0044163],
+                          'data_type': {'max': 255,
+                                        'min': 0,
+                                        'precision': 'int',
+                                        'type': 'PixelType'},
+                          'dimensions': [2015, 673],
+                          'id': 'L1_RET_E'}],
+               'id': 'FAO/WAPOR/2/L1_RET_E/L1_RET_221204',
+               'properties': {'system:asset_size': 80215,
+                              'system:footprint': {'coordinates': [[-180, -90],
+                                                                   [180, -90],
+                                                                   [180, 90],
+                                                                   [-180, 90],
+                                                                   [-180, -90]],
+                                                   'type': 'LinearRing'},
+                              'system:index': 'L1_RET_221204',
+                              'system:time_end': 1670112000000,
+                              'system:time_start': 1670112000000},
+               'type': 'Image',
+               'version': 1677333077429269},
+              {'bands': [{'crs': 'EPSG:4326',
+                          'crs_transform': [0.178571,
+                                            0,
+                                            -179.8255333,
+                                            0,
+                                            -0.178571,
+                                            60.0044163],
+                          'data_type': {'max': 255,
+                                        'min': 0,
+                                        'precision': 'int',
+                                        'type': 'PixelType'},
+                          'dimensions': [2015, 673],
+                          'id': 'L1_RET_E'}],
+               'id': 'FAO/WAPOR/2/L1_RET_E/L1_RET_221205',
+               'properties': {'system:asset_size': 81585,
+                              'system:footprint': {'coordinates': [[-180, -90],
+                                                                   [180, -90],
+                                                                   [180, 90],
+                                                                   [-180, 90],
+                                                                   [-180, -90]],
+                                                   'type': 'LinearRing'},
+                              'system:index': 'L1_RET_221205',
+                              'system:time_end': 1670198400000,
+                              'system:time_start': 1670198400000},
+               'type': 'Image',
+               'version': 1677333077543644},
+              {'bands': [{'crs': 'EPSG:4326',
+                          'crs_transform': [0.178571,
+                                            0,
+                                            -179.8255333,
+                                            0,
+                                            -0.178571,
+                                            60.0044163],
+                          'data_type': {'max': 255,
+                                        'min': 0,
+                                        'precision': 'int',
+                                        'type': 'PixelType'},
+                          'dimensions': [2015, 673],
+                          'id': 'L1_RET_E'}],
+               'id': 'FAO/WAPOR/2/L1_RET_E/L1_RET_221206',
+               'properties': {'system:asset_size': 80921,
+                              'system:footprint': {'coordinates': [[-180, -90],
+                                                                   [180, -90],
+                                                                   [180, 90],
+                                                                   [-180, 90],
+                                                                   [-180, -90]],
+                                                   'type': 'LinearRing'},
+                              'system:index': 'L1_RET_221206',
+                              'system:time_end': 1670284800000,
+                              'system:time_start': 1670284800000},
+               'type': 'Image',
+               'version': 1677333077662071},
+              {'bands': [{'crs': 'EPSG:4326',
+                          'crs_transform': [0.178571,
+                                            0,
+                                            -179.8255333,
+                                            0,
+                                            -0.178571,
+                                            60.0044163],
+                          'data_type': {'max': 255,
+                                        'min': 0,
+                                        'precision': 'int',
+                                        'type': 'PixelType'},
+                          'dimensions': [2015, 673],
+                          'id': 'L1_RET_E'}],
+               'id': 'FAO/WAPOR/2/L1_RET_E/L1_RET_221207',
+               'properties': {'system:asset_size': 79373,
+                              'system:footprint': {'coordinates': [[-180, -90],
+                                                                   [180, -90],
+                                                                   [180, 90],
+                                                                   [-180, 90],
+                                                                   [-180, -90]],
+                                                   'type': 'LinearRing'},
+                              'system:index': 'L1_RET_221207',
+                              'system:time_end': 1670371200000,
+                              'system:time_start': 1670371200000},
+               'type': 'Image',
+               'version': 1677333077769564},
+              {'bands': [{'crs': 'EPSG:4326',
+                          'crs_transform': [0.178571,
+                                            0,
+                                            -179.8255333,
+                                            0,
+                                            -0.178571,
+                                            60.0044163],
+                          'data_type': {'max': 255,
+                                        'min': 0,
+                                        'precision': 'int',
+                                        'type': 'PixelType'},
+                          'dimensions': [2015, 673],
+                          'id': 'L1_RET_E'}],
+               'id': 'FAO/WAPOR/2/L1_RET_E/L1_RET_221208',
+               'properties': {'system:asset_size': 83943,
+                              'system:footprint': {'coordinates': [[-180, -90],
+                                                                   [180, -90],
+                                                                   [180, 90],
+                                                                   [-180, 90],
+                                                                   [-180, -90]],
+                                                   'type': 'LinearRing'},
+                              'system:index': 'L1_RET_221208',
+                              'system:time_end': 1670457600000,
+                              'system:time_start': 1670457600000},
+               'type': 'Image',
+               'version': 1677333077883346},
+              {'bands': [{'crs': 'EPSG:4326',
+                          'crs_transform': [0.178571,
+                                            0,
+                                            -179.8255333,
+                                            0,
+                                            -0.178571,
+                                            60.0044163],
+                          'data_type': {'max': 255,
+                                        'min': 0,
+                                        'precision': 'int',
+                                        'type': 'PixelType'},
+                          'dimensions': [2015, 673],
+                          'id': 'L1_RET_E'}],
+               'id': 'FAO/WAPOR/2/L1_RET_E/L1_RET_221209',
+               'properties': {'system:asset_size': 81021,
+                              'system:footprint': {'coordinates': [[-180, -90],
+                                                                   [180, -90],
+                                                                   [180, 90],
+                                                                   [-180, 90],
+                                                                   [-180, -90]],
+                                                   'type': 'LinearRing'},
+                              'system:index': 'L1_RET_221209',
+                              'system:time_end': 1670544000000,
+                              'system:time_start': 1670544000000},
+               'type': 'Image',
+               'version': 1677333077992576},
+              {'bands': [{'crs': 'EPSG:4326',
+                          'crs_transform': [0.178571,
+                                            0,
+                                            -179.8255333,
+                                            0,
+                                            -0.178571,
+                                            60.0044163],
+                          'data_type': {'max': 255,
+                                        'min': 0,
+                                        'precision': 'int',
+                                        'type': 'PixelType'},
+                          'dimensions': [2015, 673],
+                          'id': 'L1_RET_E'}],
+               'id': 'FAO/WAPOR/2/L1_RET_E/L1_RET_221210',
+               'properties': {'system:asset_size': 79824,
+                              'system:footprint': {'coordinates': [[-180, -90],
+                                                                   [180, -90],
+                                                                   [180, 90],
+                                                                   [-180, 90],
+                                                                   [-180, -90]],
+                                                   'type': 'LinearRing'},
+                              'system:index': 'L1_RET_221210',
+                              'system:time_end': 1670630400000,
+                              'system:time_start': 1670630400000},
+               'type': 'Image',
+               'version': 1677333078104771},
+              {'bands': [{'crs': 'EPSG:4326',
+                          'crs_transform': [0.178571,
+                                            0,
+                                            -179.8255333,
+                                            0,
+                                            -0.178571,
+                                            60.0044163],
+                          'data_type': {'max': 255,
+                                        'min': 0,
+                                        'precision': 'int',
+                                        'type': 'PixelType'},
+                          'dimensions': [2015, 673],
+                          'id': 'L1_RET_E'}],
+               'id': 'FAO/WAPOR/2/L1_RET_E/L1_RET_221211',
+               'properties': {'system:asset_size': 78858,
+                              'system:footprint': {'coordinates': [[-180, -90],
+                                                                   [180, -90],
+                                                                   [180, 90],
+                                                                   [-180, 90],
+                                                                   [-180, -90]],
+                                                   'type': 'LinearRing'},
+                              'system:index': 'L1_RET_221211',
+                              'system:time_end': 1670716800000,
+                              'system:time_start': 1670716800000},
+               'type': 'Image',
+               'version': 1677333078221579},
+              {'bands': [{'crs': 'EPSG:4326',
+                          'crs_transform': [0.178571,
+                                            0,
+                                            -179.8255333,
+                                            0,
+                                            -0.178571,
+                                            60.0044163],
+                          'data_type': {'max': 255,
+                                        'min': 0,
+                                        'precision': 'int',
+                                        'type': 'PixelType'},
+                          'dimensions': [2015, 673],
+                          'id': 'L1_RET_E'}],
+               'id': 'FAO/WAPOR/2/L1_RET_E/L1_RET_221212',
+               'properties': {'system:asset_size': 79124,
+                              'system:footprint': {'coordinates': [[-180, -90],
+                                                                   [180, -90],
+                                                                   [180, 90],
+                                                                   [-180, 90],
+                                                                   [-180, -90]],
+                                                   'type': 'LinearRing'},
+                              'system:index': 'L1_RET_221212',
+                              'system:time_end': 1670803200000,
+                              'system:time_start': 1670803200000},
+               'type': 'Image',
+               'version': 1677333078304744},
+              {'bands': [{'crs': 'EPSG:4326',
+                          'crs_transform': [0.178571,
+                                            0,
+                                            -179.8255333,
+                                            0,
+                                            -0.178571,
+                                            60.0044163],
+                          'data_type': {'max': 255,
+                                        'min': 0,
+                                        'precision': 'int',
+                                        'type': 'PixelType'},
+                          'dimensions': [2015, 673],
+                          'id': 'L1_RET_E'}],
+               'id': 'FAO/WAPOR/2/L1_RET_E/L1_RET_221213',
+               'properties': {'system:asset_size': 79494,
+                              'system:footprint': {'coordinates': [[-180, -90],
+                                                                   [180, -90],
+                                                                   [180, 90],
+                                                                   [-180, 90],
+                                                                   [-180, -90]],
+                                                   'type': 'LinearRing'},
+                              'system:index': 'L1_RET_221213',
+                              'system:time_end': 1670889600000,
+                              'system:time_start': 1670889600000},
+               'type': 'Image',
+               'version': 1677333078422438},
+              {'bands': [{'crs': 'EPSG:4326',
+                          'crs_transform': [0.178571,
+                                            0,
+                                            -179.8255333,
+                                            0,
+                                            -0.178571,
+                                            60.0044163],
+                          'data_type': {'max': 255,
+                                        'min': 0,
+                                        'precision': 'int',
+                                        'type': 'PixelType'},
+                          'dimensions': [2015, 673],
+                          'id': 'L1_RET_E'}],
+               'id': 'FAO/WAPOR/2/L1_RET_E/L1_RET_221214',
+               'properties': {'system:asset_size': 79573,
+                              'system:footprint': {'coordinates': [[-180, -90],
+                                                                   [180, -90],
+                                                                   [180, 90],
+                                                                   [-180, 90],
+                                                                   [-180, -90]],
+                                                   'type': 'LinearRing'},
+                              'system:index': 'L1_RET_221214',
+                              'system:time_end': 1670976000000,
+                              'system:time_start': 1670976000000},
+               'type': 'Image',
+               'version': 1677333078537653},
+              {'bands': [{'crs': 'EPSG:4326',
+                          'crs_transform': [0.178571,
+                                            0,
+                                            -179.8255333,
+                                            0,
+                                            -0.178571,
+                                            60.0044163],
+                          'data_type': {'max': 255,
+                                        'min': 0,
+                                        'precision': 'int',
+                                        'type': 'PixelType'},
+                          'dimensions': [2015, 673],
+                          'id': 'L1_RET_E'}],
+               'id': 'FAO/WAPOR/2/L1_RET_E/L1_RET_221215',
+               'properties': {'system:asset_size': 78692,
+                              'system:footprint': {'coordinates': [[-180, -90],
+                                                                   [180, -90],
+                                                                   [180, 90],
+                                                                   [-180, 90],
+                                                                   [-180, -90]],
+                                                   'type': 'LinearRing'},
+                              'system:index': 'L1_RET_221215',
+                              'system:time_end': 1671062400000,
+                              'system:time_start': 1671062400000},
+               'type': 'Image',
+               'version': 1677333078640384},
+              {'bands': [{'crs': 'EPSG:4326',
+                          'crs_transform': [0.178571,
+                                            0,
+                                            -179.8255333,
+                                            0,
+                                            -0.178571,
+                                            60.0044163],
+                          'data_type': {'max': 255,
+                                        'min': 0,
+                                        'precision': 'int',
+                                        'type': 'PixelType'},
+                          'dimensions': [2015, 673],
+                          'id': 'L1_RET_E'}],
+               'id': 'FAO/WAPOR/2/L1_RET_E/L1_RET_221216',
+               'properties': {'system:asset_size': 78373,
+                              'system:footprint': {'coordinates': [[-180, -90],
+                                                                   [180, -90],
+                                                                   [180, 90],
+                                                                   [-180, 90],
+                                                                   [-180, -90]],
+                                                   'type': 'LinearRing'},
+                              'system:index': 'L1_RET_221216',
+                              'system:time_end': 1671148800000,
+                              'system:time_start': 1671148800000},
+               'type': 'Image',
+               'version': 1677333078754310.0},
+              {'bands': [{'crs': 'EPSG:4326',
+                          'crs_transform': [0.178571,
+                                            0,
+                                            -179.8255333,
+                                            0,
+                                            -0.178571,
+                                            60.0044163],
+                          'data_type': {'max': 255,
+                                        'min': 0,
+                                        'precision': 'int',
+                                        'type': 'PixelType'},
+                          'dimensions': [2015, 673],
+                          'id': 'L1_RET_E'}],
+               'id': 'FAO/WAPOR/2/L1_RET_E/L1_RET_221217',
+               'properties': {'system:asset_size': 77829,
+                              'system:footprint': {'coordinates': [[-180, -90],
+                                                                   [180, -90],
+                                                                   [180, 90],
+                                                                   [-180, 90],
+                                                                   [-180, -90]],
+                                                   'type': 'LinearRing'},
+                              'system:index': 'L1_RET_221217',
+                              'system:time_end': 1671235200000,
+                              'system:time_start': 1671235200000},
+               'type': 'Image',
+               'version': 1677333078858602},
+              {'bands': [{'crs': 'EPSG:4326',
+                          'crs_transform': [0.178571,
+                                            0,
+                                            -179.8255333,
+                                            0,
+                                            -0.178571,
+                                            60.0044163],
+                          'data_type': {'max': 255,
+                                        'min': 0,
+                                        'precision': 'int',
+                                        'type': 'PixelType'},
+                          'dimensions': [2015, 673],
+                          'id': 'L1_RET_E'}],
+               'id': 'FAO/WAPOR/2/L1_RET_E/L1_RET_221218',
+               'properties': {'system:asset_size': 78512,
+                              'system:footprint': {'coordinates': [[-180, -90],
+                                                                   [180, -90],
+                                                                   [180, 90],
+                                                                   [-180, 90],
+                                                                   [-180, -90]],
+                                                   'type': 'LinearRing'},
+                              'system:index': 'L1_RET_221218',
+                              'system:time_end': 1671321600000,
+                              'system:time_start': 1671321600000},
+               'type': 'Image',
+               'version': 1677333078976135},
+              {'bands': [{'crs': 'EPSG:4326',
+                          'crs_transform': [0.178571,
+                                            0,
+                                            -179.8255333,
+                                            0,
+                                            -0.178571,
+                                            60.0044163],
+                          'data_type': {'max': 255,
+                                        'min': 0,
+                                        'precision': 'int',
+                                        'type': 'PixelType'},
+                          'dimensions': [2015, 673],
+                          'id': 'L1_RET_E'}],
+               'id': 'FAO/WAPOR/2/L1_RET_E/L1_RET_221219',
+               'properties': {'system:asset_size': 79333,
+                              'system:footprint': {'coordinates': [[-180, -90],
+                                                                   [180, -90],
+                                                                   [180, 90],
+                                                                   [-180, 90],
+                                                                   [-180, -90]],
+                                                   'type': 'LinearRing'},
+                              'system:index': 'L1_RET_221219',
+                              'system:time_end': 1671408000000,
+                              'system:time_start': 1671408000000},
+               'type': 'Image',
+               'version': 1677333079060762},
+              {'bands': [{'crs': 'EPSG:4326',
+                          'crs_transform': [0.178571,
+                                            0,
+                                            -179.8255333,
+                                            0,
+                                            -0.178571,
+                                            60.0044163],
+                          'data_type': {'max': 255,
+                                        'min': 0,
+                                        'precision': 'int',
+                                        'type': 'PixelType'},
+                          'dimensions': [2015, 673],
+                          'id': 'L1_RET_E'}],
+               'id': 'FAO/WAPOR/2/L1_RET_E/L1_RET_221220',
+               'properties': {'system:asset_size': 78705,
+                              'system:footprint': {'coordinates': [[-180, -90],
+                                                                   [180, -90],
+                                                                   [180, 90],
+                                                                   [-180, 90],
+                                                                   [-180, -90]],
+                                                   'type': 'LinearRing'},
+                              'system:index': 'L1_RET_221220',
+                              'system:time_end': 1671494400000,
+                              'system:time_start': 1671494400000},
+               'type': 'Image',
+               'version': 1677333079175608},
+              {'bands': [{'crs': 'EPSG:4326',
+                          'crs_transform': [0.178571,
+                                            0,
+                                            -179.8255333,
+                                            0,
+                                            -0.178571,
+                                            60.0044163],
+                          'data_type': {'max': 255,
+                                        'min': 0,
+                                        'precision': 'int',
+                                        'type': 'PixelType'},
+                          'dimensions': [2015, 673],
+                          'id': 'L1_RET_E'}],
+               'id': 'FAO/WAPOR/2/L1_RET_E/L1_RET_221221',
+               'properties': {'system:asset_size': 82638,
+                              'system:footprint': {'coordinates': [[-180, -90],
+                                                                   [180, -90],
+                                                                   [180, 90],
+                                                                   [-180, 90],
+                                                                   [-180, -90]],
+                                                   'type': 'LinearRing'},
+                              'system:index': 'L1_RET_221221',
+                              'system:time_end': 1671580800000,
+                              'system:time_start': 1671580800000},
+               'type': 'Image',
+               'version': 1677333079284670.0},
+              {'bands': [{'crs': 'EPSG:4326',
+                          'crs_transform': [0.178571,
+                                            0,
+                                            -179.8255333,
+                                            0,
+                                            -0.178571,
+                                            60.0044163],
+                          'data_type': {'max': 255,
+                                        'min': 0,
+                                        'precision': 'int',
+                                        'type': 'PixelType'},
+                          'dimensions': [2015, 673],
+                          'id': 'L1_RET_E'}],
+               'id': 'FAO/WAPOR/2/L1_RET_E/L1_RET_221222',
+               'properties': {'system:asset_size': 77490,
+                              'system:footprint': {'coordinates': [[-180, -90],
+                                                                   [180, -90],
+                                                                   [180, 90],
+                                                                   [-180, 90],
+                                                                   [-180, -90]],
+                                                   'type': 'LinearRing'},
+                              'system:index': 'L1_RET_221222',
+                              'system:time_end': 1671667200000,
+                              'system:time_start': 1671667200000},
+               'type': 'Image',
+               'version': 1677333079400915},
+              {'bands': [{'crs': 'EPSG:4326',
+                          'crs_transform': [0.178571,
+                                            0,
+                                            -179.8255333,
+                                            0,
+                                            -0.178571,
+                                            60.0044163],
+                          'data_type': {'max': 255,
+                                        'min': 0,
+                                        'precision': 'int',
+                                        'type': 'PixelType'},
+                          'dimensions': [2015, 673],
+                          'id': 'L1_RET_E'}],
+               'id': 'FAO/WAPOR/2/L1_RET_E/L1_RET_221223',
+               'properties': {'system:asset_size': 76549,
+                              'system:footprint': {'coordinates': [[-180, -90],
+                                                                   [180, -90],
+                                                                   [180, 90],
+                                                                   [-180, 90],
+                                                                   [-180, -90]],
+                                                   'type': 'LinearRing'},
+                              'system:index': 'L1_RET_221223',
+                              'system:time_end': 1671753600000,
+                              'system:time_start': 1671753600000},
+               'type': 'Image',
+               'version': 1677333079488394},
+              {'bands': [{'crs': 'EPSG:4326',
+                          'crs_transform': [0.178571,
+                                            0,
+                                            -179.8255333,
+                                            0,
+                                            -0.178571,
+                                            60.0044163],
+                          'data_type': {'max': 255,
+                                        'min': 0,
+                                        'precision': 'int',
+                                        'type': 'PixelType'},
+                          'dimensions': [2015, 673],
+                          'id': 'L1_RET_E'}],
+               'id': 'FAO/WAPOR/2/L1_RET_E/L1_RET_221224',
+               'properties': {'system:asset_size': 75598,
+                              'system:footprint': {'coordinates': [[-180, -90],
+                                                                   [180, -90],
+                                                                   [180, 90],
+                                                                   [-180, 90],
+                                                                   [-180, -90]],
+                                                   'type': 'LinearRing'},
+                              'system:index': 'L1_RET_221224',
+                              'system:time_end': 1671840000000,
+                              'system:time_start': 1671840000000},
+               'type': 'Image',
+               'version': 1677333079597719},
+              {'bands': [{'crs': 'EPSG:4326',
+                          'crs_transform': [0.178571,
+                                            0,
+                                            -179.8255333,
+                                            0,
+                                            -0.178571,
+                                            60.0044163],
+                          'data_type': {'max': 255,
+                                        'min': 0,
+                                        'precision': 'int',
+                                        'type': 'PixelType'},
+                          'dimensions': [2015, 673],
+                          'id': 'L1_RET_E'}],
+               'id': 'FAO/WAPOR/2/L1_RET_E/L1_RET_221225',
+               'properties': {'system:asset_size': 75980,
+                              'system:footprint': {'coordinates': [[-180, -90],
+                                                                   [180, -90],
+                                                                   [180, 90],
+                                                                   [-180, 90],
+                                                                   [-180, -90]],
+                                                   'type': 'LinearRing'},
+                              'system:index': 'L1_RET_221225',
+                              'system:time_end': 1671926400000,
+                              'system:time_start': 1671926400000},
+               'type': 'Image',
+               'version': 1677333079713537},
+              {'bands': [{'crs': 'EPSG:4326',
+                          'crs_transform': [0.178571,
+                                            0,
+                                            -179.8255333,
+                                            0,
+                                            -0.178571,
+                                            60.0044163],
+                          'data_type': {'max': 255,
+                                        'min': 0,
+                                        'precision': 'int',
+                                        'type': 'PixelType'},
+                          'dimensions': [2015, 673],
+                          'id': 'L1_RET_E'}],
+               'id': 'FAO/WAPOR/2/L1_RET_E/L1_RET_221226',
+               'properties': {'system:asset_size': 76976,
+                              'system:footprint': {'coordinates': [[-180, -90],
+                                                                   [180, -90],
+                                                                   [180, 90],
+                                                                   [-180, 90],
+                                                                   [-180, -90]],
+                                                   'type': 'LinearRing'},
+                              'system:index': 'L1_RET_221226',
+                              'system:time_end': 1672012800000,
+                              'system:time_start': 1672012800000},
+               'type': 'Image',
+               'version': 1677333079830967},
+              {'bands': [{'crs': 'EPSG:4326',
+                          'crs_transform': [0.178571,
+                                            0,
+                                            -179.8255333,
+                                            0,
+                                            -0.178571,
+                                            60.0044163],
+                          'data_type': {'max': 255,
+                                        'min': 0,
+                                        'precision': 'int',
+                                        'type': 'PixelType'},
+                          'dimensions': [2015, 673],
+                          'id': 'L1_RET_E'}],
+               'id': 'FAO/WAPOR/2/L1_RET_E/L1_RET_221227',
+               'properties': {'system:asset_size': 77380,
+                              'system:footprint': {'coordinates': [[-180, -90],
+                                                                   [180, -90],
+                                                                   [180, 90],
+                                                                   [-180, 90],
+                                                                   [-180, -90]],
+                                                   'type': 'LinearRing'},
+                              'system:index': 'L1_RET_221227',
+                              'system:time_end': 1672099200000,
+                              'system:time_start': 1672099200000},
+               'type': 'Image',
+               'version': 1677333079946429},
+              {'bands': [{'crs': 'EPSG:4326',
+                          'crs_transform': [0.178571,
+                                            0,
+                                            -179.8255333,
+                                            0,
+                                            -0.178571,
+                                            60.0044163],
+                          'data_type': {'max': 255,
+                                        'min': 0,
+                                        'precision': 'int',
+                                        'type': 'PixelType'},
+                          'dimensions': [2015, 673],
+                          'id': 'L1_RET_E'}],
+               'id': 'FAO/WAPOR/2/L1_RET_E/L1_RET_221228',
+               'properties': {'system:asset_size': 78183,
+                              'system:footprint': {'coordinates': [[-180, -90],
+                                                                   [180, -90],
+                                                                   [180, 90],
+                                                                   [-180, 90],
+                                                                   [-180, -90]],
+                                                   'type': 'LinearRing'},
+                              'system:index': 'L1_RET_221228',
+                              'system:time_end': 1672185600000,
+                              'system:time_start': 1672185600000},
+               'type': 'Image',
+               'version': 1677333080055211},
+              {'bands': [{'crs': 'EPSG:4326',
+                          'crs_transform': [0.178571,
+                                            0,
+                                            -179.8255333,
+                                            0,
+                                            -0.178571,
+                                            60.0044163],
+                          'data_type': {'max': 255,
+                                        'min': 0,
+                                        'precision': 'int',
+                                        'type': 'PixelType'},
+                          'dimensions': [2015, 673],
+                          'id': 'L1_RET_E'}],
+               'id': 'FAO/WAPOR/2/L1_RET_E/L1_RET_221229',
+               'properties': {'system:asset_size': 78602,
+                              'system:footprint': {'coordinates': [[-180, -90],
+                                                                   [180, -90],
+                                                                   [180, 90],
+                                                                   [-180, 90],
+                                                                   [-180, -90]],
+                                                   'type': 'LinearRing'},
+                              'system:index': 'L1_RET_221229',
+                              'system:time_end': 1672272000000,
+                              'system:time_start': 1672272000000},
+               'type': 'Image',
+               'version': 1677333080168408},
+              {'bands': [{'crs': 'EPSG:4326',
+                          'crs_transform': [0.178571,
+                                            0,
+                                            -179.8255333,
+                                            0,
+                                            -0.178571,
+                                            60.0044163],
+                          'data_type': {'max': 255,
+                                        'min': 0,
+                                        'precision': 'int',
+                                        'type': 'PixelType'},
+                          'dimensions': [2015, 673],
+                          'id': 'L1_RET_E'}],
+               'id': 'FAO/WAPOR/2/L1_RET_E/L1_RET_221230',
+               'properties': {'system:asset_size': 78777,
+                              'system:footprint': {'coordinates': [[-180, -90],
+                                                                   [180, -90],
+                                                                   [180, 90],
+                                                                   [-180, 90],
+                                                                   [-180, -90]],
+                                                   'type': 'LinearRing'},
+                              'system:index': 'L1_RET_221230',
+                              'system:time_end': 1672358400000,
+                              'system:time_start': 1672358400000},
+               'type': 'Image',
+               'version': 1677333080282945},
+              {'bands': [{'crs': 'EPSG:4326',
+                          'crs_transform': [0.178571,
+                                            0,
+                                            -179.8255333,
+                                            0,
+                                            -0.178571,
+                                            60.0044163],
+                          'data_type': {'max': 255,
+                                        'min': 0,
+                                        'precision': 'int',
+                                        'type': 'PixelType'},
+                          'dimensions': [2015, 673],
+                          'id': 'L1_RET_E'}],
+               'id': 'FAO/WAPOR/2/L1_RET_E/L1_RET_221231',
+               'properties': {'system:asset_size': 78742,
+                              'system:footprint': {'coordinates': [[-180, -90],
+                                                                   [180, -90],
+                                                                   [180, 90],
+                                                                   [-180, 90],
+                                                                   [-180, -90]],
+                                                   'type': 'LinearRing'},
+                              'system:index': 'L1_RET_221231',
+                              'system:time_end': 1672444800000,
+                              'system:time_start': 1672444800000},
+               'type': 'Image',
+               'version': 1677333080393940.0}],
+ 'id': 'FAO/WAPOR/2/L1_RET_E',
+ 'properties': {'date_range': [1230768000000, 1647388800000],
+                'description': '&lt;p&gt;Reference evapotranspiration (RET) is '
+                               'defined as the evapotranspiration from a\n'
+                               'hypothetical reference crop and it simulates '
+                               'the behaviour of a well-watered\n'
+                               'grass surface. Each pixel represents the daily '
+                               'reference evapotranspiration in '
+                               'mm.&lt;/p&gt;&lt;p&gt;&lt;b&gt;Provider: &lt;a '
+                               'href="https://wapor.apps.fao.org/catalog/WAPOR_2/1/L1_RET_E"&gt;FAO '
+                               'UN&lt;/a&gt;&lt;/b&gt;&lt;br&gt;&lt;p&gt;&lt;b&gt;Resolution&lt;/b&gt;&lt;br&gt;18924 '
+                               'meters\n'
+                               '&lt;/p&gt;&lt;p&gt;&lt;b&gt;Cadence&lt;/b&gt;&lt;br&gt;\n'
+                               '  1 day\n'
+                               '&lt;/p&gt;&lt;p&gt;&lt;b&gt;Bands&lt;/b&gt;&lt;table '
+                               'class="eecat"&gt;&lt;tr&gt;&lt;th scope="col"&gt;Name&lt;/th&gt;&lt;th '
+                               'scope="col"&gt;Description&lt;/th&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;L1_RET_E&lt;/td&gt;&lt;td&gt;&lt;p&gt;Reference '
+                               'Evapotranspiration (Daily) '
+                               '[mm]&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;p&gt;&lt;b&gt;Terms of '
+                               'Use&lt;/b&gt;&lt;br&gt;&lt;p&gt;The Food and Agriculture '
+                               'Organization of the United Nations (FAO) is '
+                               'mandated to\n'
+                               'collect, analyze, interpret, and disseminate '
+                               'information related to nutrition,\n'
+                               'food, and agriculture. In this regard, it '
+                               'publishes a number of databases on topics\n'
+                               'related to FAO&amp;#39;s mandate, and encourages '
+                               'the use of them for scientific and research '
+                               'purposes.\n'
+                               'Consistent with the principles of openness and '
+                               'sharing envisioned under the &lt;a '
+                               'href="http://www.fao.org/3/ca7570en/ca7570en.pdf"&gt;Open '
+                               'Data Licensing\n'
+                               'For Statistical Databases&lt;/a&gt;, and consistent '
+                               'with the mandate of FAO, data from the &lt;a '
+                               'href="https://wapor.apps.fao.org/home/WAPOR_2/1"&gt;Water\n'
+                               'Productivity Open Access Portal (WaPOR)&lt;/a&gt;, '
+                               'as part of &lt;a '
+                               'href="http://www.fao.org/aquastat/en/"&gt;AQUASTAT&lt;/a&gt;\n'
+                               '- FAO&amp;#39;s Global Information System on Water '
+                               'and Agriculture, is available free to the user '
+                               'community.&lt;/p&gt;&lt;p&gt;&lt;b&gt;Suggested '
+                               'citation(s)&lt;/b&gt;&lt;ul&gt;&lt;li&gt;&lt;p&gt;FAO 2018. WaPOR '
+                               'Database Methodology: Level 1. Remote Sensing '
+                               'for Water Productivity\n'
+                               'Technical Report: Methodology Series. Rome, '
+                               'FAO. 72 pages.&lt;/p&gt;&lt;/li&gt;&lt;li&gt;&lt;p&gt;FAO 2020. WaPOR '
+                               'V2 Database Methodology. Remote Sensing for '
+                               'Water Productivity\n'
+                               'Technical Report: Methodology Series. Rome, '
+                               'FAO. (in press)&lt;/p&gt;&lt;/li&gt;&lt;/ul&gt;&lt;style&gt;\n'
+                               '  table.eecat {\n'
+                               '  border: 1px solid black;\n'
+                               '  border-collapse: collapse;\n'
+                               '  font-size: 13px;\n'
+                               '  }\n'
+                               '  table.eecat td, tr, th {\n'
+                               '  text-align: left; vertical-align: top;\n'
+                               '  border: 1px solid gray; padding: 3px;\n'
+                               '  }\n'
+                               '  td.nobreak { white-space: nowrap; }\n'
+                               '&lt;/style&gt;',
+                'keywords': ['agriculture', 'fao', 'wapor', 'water'],
+                'max_mirrored_version': 1679472761747976,
+                'period': 1,
+                'period_mapping': [1230768000000, 1647388800000],
+                'product_tags': ['agriculture', 'water'],
+                'provider': 'FAO UN',
+                'provider_url': 'https://wapor.apps.fao.org/catalog/WAPOR_2/1/L1_RET_E',
+                'sample': 'https://mw1.google.com/ges/dd/images/FAO_WAPOR_2_L1_RET_E_sample.png',
+                'source_tags': ['fao', 'wapor'],
+                'tags': ['agriculture', 'fao', 'wapor', 'water'],
+                'title': 'WAPOR Daily Reference Evapotranspiration',
+                'type_name': 'ImageCollection',
+                'visualization_0_bands': '',
+                'visualization_0_name': 'Reference Evapotranspiration (Daily) '
+                                        '[mm]'},
+ 'type': 'ImageCollection',
+ 'version': 1685078132815723}</code></pre>
+</div>
+</div>
+<div id="e4a9a5ed-fcde-4cba-a40e-239df36ba755" class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Use the get methog to retrieve a specific property</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>dataset.get(<span class="st">'description'</span>).getInfo()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="15">
+<pre><code>'&lt;p&gt;Reference evapotranspiration (RET) is defined as the evapotranspiration from a\nhypothetical reference crop and it simulates the behaviour of a well-watered\ngrass surface. Each pixel represents the daily reference evapotranspiration in mm.&lt;/p&gt;&lt;p&gt;&lt;b&gt;Provider: &lt;a href="https://wapor.apps.fao.org/catalog/WAPOR_2/1/L1_RET_E"&gt;FAO UN&lt;/a&gt;&lt;/b&gt;&lt;br&gt;&lt;p&gt;&lt;b&gt;Resolution&lt;/b&gt;&lt;br&gt;18924 meters\n&lt;/p&gt;&lt;p&gt;&lt;b&gt;Cadence&lt;/b&gt;&lt;br&gt;\n  1 day\n&lt;/p&gt;&lt;p&gt;&lt;b&gt;Bands&lt;/b&gt;&lt;table class="eecat"&gt;&lt;tr&gt;&lt;th scope="col"&gt;Name&lt;/th&gt;&lt;th scope="col"&gt;Description&lt;/th&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;L1_RET_E&lt;/td&gt;&lt;td&gt;&lt;p&gt;Reference Evapotranspiration (Daily) [mm]&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;p&gt;&lt;b&gt;Terms of Use&lt;/b&gt;&lt;br&gt;&lt;p&gt;The Food and Agriculture Organization of the United Nations (FAO) is mandated to\ncollect, analyze, interpret, and disseminate information related to nutrition,\nfood, and agriculture. In this regard, it publishes a number of databases on topics\nrelated to FAO&amp;#39;s mandate, and encourages the use of them for scientific and research purposes.\nConsistent with the principles of openness and sharing envisioned under the &lt;a href="http://www.fao.org/3/ca7570en/ca7570en.pdf"&gt;Open Data Licensing\nFor Statistical Databases&lt;/a&gt;, and consistent with the mandate of FAO, data from the &lt;a href="https://wapor.apps.fao.org/home/WAPOR_2/1"&gt;Water\nProductivity Open Access Portal (WaPOR)&lt;/a&gt;, as part of &lt;a href="http://www.fao.org/aquastat/en/"&gt;AQUASTAT&lt;/a&gt;\n- FAO&amp;#39;s Global Information System on Water and Agriculture, is available free to the user community.&lt;/p&gt;&lt;p&gt;&lt;b&gt;Suggested citation(s)&lt;/b&gt;&lt;ul&gt;&lt;li&gt;&lt;p&gt;FAO 2018. WaPOR Database Methodology: Level 1. Remote Sensing for Water Productivity\nTechnical Report: Methodology Series. Rome, FAO. 72 pages.&lt;/p&gt;&lt;/li&gt;&lt;li&gt;&lt;p&gt;FAO 2020. WaPOR V2 Database Methodology. Remote Sensing for Water Productivity\nTechnical Report: Methodology Series. Rome, FAO. (in press)&lt;/p&gt;&lt;/li&gt;&lt;/ul&gt;&lt;style&gt;\n  table.eecat {\n  border: 1px solid black;\n  border-collapse: collapse;\n  font-size: 13px;\n  }\n  table.eecat td, tr, th {\n  text-align: left; vertical-align: top;\n  border: 1px solid gray; padding: 3px;\n  }\n  td.nobreak { white-space: nowrap; }\n&lt;/style&gt;'</code></pre>
+</div>
+</div>
+<div id="1a81d8b0-1cca-4296-8966-62e7cd30aac5" class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Information about first image within the collection (output is long!)</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>dataset.first().getInfo()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="16">
+<pre><code>{'type': 'Image',
+ 'bands': [{'id': 'L1_RET_E',
+   'data_type': {'type': 'PixelType',
+    'precision': 'int',
+    'min': 0,
+    'max': 255},
+   'dimensions': [2015, 673],
+   'crs': 'EPSG:4326',
+   'crs_transform': [0.178571, 0, -179.8255333, 0, -0.178571, 60.0044163]}],
+ 'version': 1677333077102453,
+ 'id': 'FAO/WAPOR/2/L1_RET_E/L1_RET_221201',
+ 'properties': {'system:time_start': 1669852800000,
+  'system:footprint': {'type': 'LinearRing',
+   'coordinates': [[-180, -90],
+    [180, -90],
+    [180, 90],
+    [-180, 90],
+    [-180, -90]]},
+  'system:time_end': 1669852800000,
+  'system:asset_size': 79472,
+  'system:index': 'L1_RET_221201'}}</code></pre>
+</div>
+</div>
+<div id="4080f919-11b1-487a-bb46-2c84085e3298" class="cell" data-execution_count="45">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Information about feature collection</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>point <span class="op">=</span> ee.Geometry.Point([<span class="op">-</span><span class="fl">76.013</span>, <span class="fl">4.736</span>])</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>dataset.first().sample(point,<span class="dv">1</span>).getInfo() <span class="co"># Sample at 1 meter resolution</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="45">
+<pre><code>{'type': 'FeatureCollection',
+ 'columns': {'L1_RET_E': 'Short&lt;0, 255&gt;'},
+ 'properties': {'band_order': ['L1_RET_E']},
+ 'features': []}</code></pre>
+</div>
+</div>
+<div id="2e8987e4-ca35-4f27-9332-057fa8ad3175" class="cell" data-execution_count="47">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Information about feature</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="co">#eto = dataset.first().sample(point,1).first().getNumber('L1_RET_E').getInfo()</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'The grass reference ET is </span><span class="sc">{</span>eto<span class="sc">}</span><span class="ss"> mm'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-error">
+<div class="ansi-escaped-output">
+<pre><span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">HttpError</span>                                 Traceback (most recent call last)
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">~/miniconda3/envs/stat-myst-site/lib/python3.12/site-packages/ee/data.py:349</span>, in <span class="ansi-cyan-fg">_execute_cloud_call</span><span class="ansi-blue-fg">(call, num_retries)</span>
+<span class="ansi-green-fg">    348</span> <span style="font-weight:bold;color:rgb(0,135,0)">try</span>:
+<span class="ansi-green-fg">--&gt; </span><span class="ansi-green-fg">349</span>   <span style="font-weight:bold;color:rgb(0,135,0)">return</span> <span class="ansi-yellow-bg">call</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">execute</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">num_retries</span><span class="ansi-yellow-bg">=</span><span class="ansi-yellow-bg">num_retries</span><span class="ansi-yellow-bg">)</span>
+<span class="ansi-green-fg">    350</span> <span style="font-weight:bold;color:rgb(0,135,0)">except</span> googleapiclient.errors.HttpError <span style="font-weight:bold;color:rgb(0,135,0)">as</span> e:
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">~/miniconda3/envs/stat-myst-site/lib/python3.12/site-packages/googleapiclient/_helpers.py:130</span>, in <span class="ansi-cyan-fg">positional.&lt;locals&gt;.positional_decorator.&lt;locals&gt;.positional_wrapper</span><span class="ansi-blue-fg">(*args, **kwargs)</span>
+<span class="ansi-green-fg">    129</span>         logger.warning(message)
+<span class="ansi-green-fg">--&gt; </span><span class="ansi-green-fg">130</span> <span style="font-weight:bold;color:rgb(0,135,0)">return</span> <span class="ansi-yellow-bg">wrapped</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">*</span><span class="ansi-yellow-bg">args</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">*</span><span class="ansi-yellow-bg">*</span><span class="ansi-yellow-bg">kwargs</span><span class="ansi-yellow-bg">)</span>
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">~/miniconda3/envs/stat-myst-site/lib/python3.12/site-packages/googleapiclient/http.py:938</span>, in <span class="ansi-cyan-fg">HttpRequest.execute</span><span class="ansi-blue-fg">(self, http, num_retries)</span>
+<span class="ansi-green-fg">    937</span> <span style="font-weight:bold;color:rgb(0,135,0)">if</span> resp.status &gt;= <span class="ansi-green-fg">300</span>:
+<span class="ansi-green-fg">--&gt; </span><span class="ansi-green-fg">938</span>     <span style="font-weight:bold;color:rgb(0,135,0)">raise</span> HttpError(resp, content, uri=<span style="color:rgb(0,135,0)">self</span>.uri)
+<span class="ansi-green-fg">    939</span> <span style="font-weight:bold;color:rgb(0,135,0)">return</span> <span style="color:rgb(0,135,0)">self</span>.postproc(resp, content)
+
+<span class="ansi-red-fg">HttpError</span>: &lt;HttpError 400 when requesting https://earthengine.googleapis.com/v1/projects/ee-ializarazos/value:compute?prettyPrint=false&amp;alt=json returned "Element.getNumber: Parameter 'object' is required and may not be null.". Details: "Element.getNumber: Parameter 'object' is required and may not be null."&gt;
+
+During handling of the above exception, another exception occurred:
+
+<span class="ansi-red-fg">EEException</span>                               Traceback (most recent call last)
+<span class="ansi-cyan-fg">Cell</span><span class="ansi-cyan-fg"> </span><span class="ansi-green-fg">In[47]</span><span class="ansi-green-fg">, line 2</span>
+<span class="ansi-green-fg">      1</span> <span style="font-style:italic;color:rgb(95,135,135)"># Information about feature</span>
+<span class="ansi-green-fg">----&gt; </span><span class="ansi-green-fg">2</span> eto = <span class="ansi-yellow-bg">dataset</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">first</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">)</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">sample</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">point</span><span class="ansi-yellow-bg">,</span><span class="ansi-green-fg ansi-yellow-bg">1</span><span class="ansi-yellow-bg">)</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">first</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">)</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">getNumber</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-fg ansi-yellow-bg">'</span><span class="ansi-yellow-fg ansi-yellow-bg">L1_RET_E</span><span class="ansi-yellow-fg ansi-yellow-bg">'</span><span class="ansi-yellow-bg">)</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">getInfo</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">)</span>
+<span class="ansi-green-fg">      3</span> <span style="color:rgb(0,135,0)">print</span>(<span class="ansi-yellow-fg">f</span><span class="ansi-yellow-fg">'</span><span class="ansi-yellow-fg">The grass reference ET is </span><span style="font-weight:bold;color:rgb(175,95,135)">{</span>eto<span style="font-weight:bold;color:rgb(175,95,135)">}</span><span class="ansi-yellow-fg"> mm</span><span class="ansi-yellow-fg">'</span>)
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">~/miniconda3/envs/stat-myst-site/lib/python3.12/site-packages/ee/computedobject.py:108</span>, in <span class="ansi-cyan-fg">ComputedObject.getInfo</span><span class="ansi-blue-fg">(self)</span>
+<span class="ansi-green-fg">    102</span> <span style="font-weight:bold;color:rgb(0,135,0)">def</span><span style="color:rgb(188,188,188)"> </span><span class="ansi-blue-fg">getInfo</span>(<span style="color:rgb(0,135,0)">self</span>) -&gt; Any | <span style="font-weight:bold;color:rgb(0,135,0)">None</span>:
+<span class="ansi-green-fg">    103</span> <span style="color:rgb(188,188,188)">  </span><span style="font-style:italic" class="ansi-yellow-fg">"""Fetch and return information about this object.</span>
+<span class="ansi-green-fg">    104</span> 
+<span class="ansi-green-fg">    105</span> <span style="font-style:italic" class="ansi-yellow-fg">  Returns:</span>
+<span class="ansi-green-fg">    106</span> <span style="font-style:italic" class="ansi-yellow-fg">    The object can evaluate to anything.</span>
+<span class="ansi-green-fg">    107</span> <span style="font-style:italic" class="ansi-yellow-fg">  """</span>
+<span class="ansi-green-fg">--&gt; </span><span class="ansi-green-fg">108</span>   <span style="font-weight:bold;color:rgb(0,135,0)">return</span> <span class="ansi-yellow-bg">data</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">computeValue</span><span class="ansi-yellow-bg">(</span><span style="color:rgb(0,135,0)" class="ansi-yellow-bg">self</span><span class="ansi-yellow-bg">)</span>
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">~/miniconda3/envs/stat-myst-site/lib/python3.12/site-packages/ee/data.py:1064</span>, in <span class="ansi-cyan-fg">computeValue</span><span class="ansi-blue-fg">(obj)</span>
+<span class="ansi-green-fg">   1061</span> body = {<span class="ansi-yellow-fg">'</span><span class="ansi-yellow-fg">expression</span><span class="ansi-yellow-fg">'</span>: serializer.encode(obj, for_cloud_api=<span style="font-weight:bold;color:rgb(0,135,0)">True</span>)}
+<span class="ansi-green-fg">   1062</span> _maybe_populate_workload_tag(body)
+<span class="ansi-green-fg">-&gt; </span><span class="ansi-green-fg">1064</span> <span style="font-weight:bold;color:rgb(0,135,0)">return</span> <span class="ansi-yellow-bg">_execute_cloud_call</span><span class="ansi-yellow-bg">(</span>
+<span class="ansi-green-fg">   1065</span> <span class="ansi-yellow-bg">    </span><span class="ansi-yellow-bg">_get_cloud_projects</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">)</span>
+<span class="ansi-green-fg">   1066</span> <span class="ansi-yellow-bg">    </span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">value</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">)</span>
+<span class="ansi-green-fg">   1067</span> <span class="ansi-yellow-bg">    </span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">compute</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">body</span><span class="ansi-yellow-bg">=</span><span class="ansi-yellow-bg">body</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">project</span><span class="ansi-yellow-bg">=</span><span class="ansi-yellow-bg">_get_projects_path</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">)</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">prettyPrint</span><span class="ansi-yellow-bg">=</span><span style="font-weight:bold;color:rgb(0,135,0)" class="ansi-yellow-bg">False</span><span class="ansi-yellow-bg">)</span>
+<span class="ansi-green-fg">   1068</span> <span class="ansi-yellow-bg">)</span>[<span class="ansi-yellow-fg">'</span><span class="ansi-yellow-fg">result</span><span class="ansi-yellow-fg">'</span>]
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">~/miniconda3/envs/stat-myst-site/lib/python3.12/site-packages/ee/data.py:351</span>, in <span class="ansi-cyan-fg">_execute_cloud_call</span><span class="ansi-blue-fg">(call, num_retries)</span>
+<span class="ansi-green-fg">    349</span>   <span style="font-weight:bold;color:rgb(0,135,0)">return</span> call.execute(num_retries=num_retries)
+<span class="ansi-green-fg">    350</span> <span style="font-weight:bold;color:rgb(0,135,0)">except</span> googleapiclient.errors.HttpError <span style="font-weight:bold;color:rgb(0,135,0)">as</span> e:
+<span class="ansi-green-fg">--&gt; </span><span class="ansi-green-fg">351</span>   <span style="font-weight:bold;color:rgb(0,135,0)">raise</span> _translate_cloud_exception(e)
+
+<span class="ansi-red-fg">EEException</span>: Element.getNumber: Parameter 'object' is required and may not be null.</pre>
+</div>
 </div>
 </div>
 <p>Alternative solution: Access the image directly rather than the collection.</p>
-<div class="sourceCode" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>ee.Image(<span class="st">'IDAHO_EPSCOR/GRIDMET/20220701'</span>).sample(point,<span class="dv">1</span>).first().getNumber(<span class="st">'eto'</span>).getInfo()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>ee.Image(<span class="st">'IDAHO_EPSCOR/GRIDMET/20220701'</span>).sample(point,<span class="dv">1</span>).first().getNumber(<span class="st">'eto'</span>).getInfo()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <section id="get-dataset-timestamps" class="level4">
 <h4 class="anchored" data-anchor-id="get-dataset-timestamps">Get dataset timestamps</h4>
-<div id="6ca3027f-c682-4fa9-bbce-31ddb1864083" class="cell" data-execution_count="32">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Obtain the START time of the dataset to check that it matches our request.</span></span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Response is in milliseconds since 1-Jan-1970</span></span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>dataset.select(<span class="st">'eto'</span>).first().getNumber(<span class="st">'system:time_start'</span>).getInfo()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="32">
-<pre><code>1656655200000</code></pre>
+<div id="6ca3027f-c682-4fa9-bbce-31ddb1864083" class="cell" data-execution_count="37">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Obtain the START time of the dataset to check that it matches our request.</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Response is in milliseconds since 1-Jan-1970</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>dataset.select(<span class="st">'eto'</span>).first().getNumber(<span class="st">'system:time_start'</span>).getInfo()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="37">
+<pre><code>1669852800000</code></pre>
 </div>
 </div>
-<div id="e4dee880-1385-4ad9-b712-33e3affa269d" class="cell" data-execution_count="33">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Obtain the </span><span class="re">END</span><span class="co"> time of the dataset to check that it matches our request.</span></span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Response is in milliseconds since 1-Jan-1970</span></span>
-<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>dataset.select(<span class="st">'eto'</span>).first().getNumber(<span class="st">'system:time_end'</span>).getInfo()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="33">
-<pre><code>1656741600000</code></pre>
+<div id="e4dee880-1385-4ad9-b712-33e3affa269d" class="cell" data-execution_count="38">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Obtain the </span><span class="re">END</span><span class="co"> time of the dataset to check that it matches our request.</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Response is in milliseconds since 1-Jan-1970</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>dataset.select(<span class="st">'eto'</span>).first().getNumber(<span class="st">'system:time_end'</span>).getInfo()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="38">
+<pre><code>1669852800000</code></pre>
 </div>
 </div>
-<div id="7827a045-e1f2-4f36-958f-443589ec82fa" class="cell" data-execution_count="36">
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Find the datetime of the serial date numbers</span></span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Input in "fromtimestamp()" has to be in seconds, so we divide by 1000</span></span>
-<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Start time:'</span>, datetime.fromtimestamp(<span class="dv">1656655200000</span><span class="op">/</span><span class="dv">1000</span>).strftime(<span class="st">'%Y-%m-</span><span class="sc">%d</span><span class="st"> %H:%M:%S.</span><span class="sc">%f</span><span class="st">'</span>))</span>
-<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'End time:'</span>, datetime.fromtimestamp(<span class="dv">1656741600000</span><span class="op">/</span><span class="dv">1000</span>).strftime(<span class="st">'%Y-%m-</span><span class="sc">%d</span><span class="st"> %H:%M:%S.</span><span class="sc">%f</span><span class="st">'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="7827a045-e1f2-4f36-958f-443589ec82fa" class="cell" data-execution_count="39">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Find the datetime of the serial date numbers</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Input in "fromtimestamp()" has to be in seconds, so we divide by 1000</span></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Start time:'</span>, datetime.fromtimestamp(<span class="dv">1656655200000</span><span class="op">/</span><span class="dv">1000</span>).strftime(<span class="st">'%Y-%m-</span><span class="sc">%d</span><span class="st"> %H:%M:%S.</span><span class="sc">%f</span><span class="st">'</span>))</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'End time:'</span>, datetime.fromtimestamp(<span class="dv">1656741600000</span><span class="op">/</span><span class="dv">1000</span>).strftime(<span class="st">'%Y-%m-</span><span class="sc">%d</span><span class="st"> %H:%M:%S.</span><span class="sc">%f</span><span class="st">'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Start time: 2022-07-01 01:00:00.000000
-End time: 2022-07-02 01:00:00.000000</code></pre>
+<pre><code>Start time: 2022-06-30 23:00:00.000000
+End time: 2022-07-01 23:00:00.000000</code></pre>
 </div>
 </div>
 </section>
@@ -582,21 +1899,19 @@ End time: 2022-07-02 01:00:00.000000</code></pre>
 <h2 class="anchored" data-anchor-id="example-4-retrieve-soil-properties-for-a-given-location">Example 4: Retrieve soil properties for a given location</h2>
 <p>Product: SoilGrids</p>
 <p>Source: https://samapriya.github.io/awesome-gee-community-datasets/projects/isric/</p>
-<div id="eaecd5ef-5888-4902-bc81-d2ae1c72c3cd" class="cell" data-execution_count="37">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the SoilGrids dataset from GEE</span></span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>soil_grids <span class="op">=</span> ee.Image(<span class="st">"projects/soilgrids-isric/sand_mean"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="eaecd5ef-5888-4902-bc81-d2ae1c72c3cd" class="cell" data-execution_count="40">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the SoilGrids dataset from GEE</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>soil_grids <span class="op">=</span> ee.Image(<span class="st">"projects/soilgrids-isric/sand_mean"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="e18d7f23-186b-49c4-b31e-b891b6d6aa29" class="cell" data-execution_count="38">
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define a point geometry</span></span>
-<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>lat <span class="op">=</span> <span class="fl">37.839154</span></span>
-<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>lon <span class="op">=</span> <span class="op">-</span><span class="fl">99.101594</span></span>
-<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>point <span class="op">=</span> ee.Geometry.Point(lon,lat)</span>
-<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>sand <span class="op">=</span> soil_grids.sample(point,<span class="dv">250</span>).first().getNumber(<span class="st">'sand_0-5cm_mean'</span>).multiply(<span class="fl">0.1</span>).getInfo()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="e18d7f23-186b-49c4-b31e-b891b6d6aa29" class="cell" data-execution_count="43">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define a point geometry</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>point <span class="op">=</span> ee.Geometry.Point([<span class="op">-</span><span class="fl">76.013</span>, <span class="fl">4.736</span>])</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>sand <span class="op">=</span> soil_grids.sample(point,<span class="dv">250</span>).first().getNumber(<span class="st">'sand_0-5cm_mean'</span>).multiply(<span class="fl">0.1</span>).getInfo()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="a2190855-c9ec-413f-8382-048cc17047de" class="cell" data-execution_count="39">
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'The percentage of sand at (</span><span class="sc">{</span>lat<span class="sc">}</span><span class="ss">,</span><span class="sc">{</span>lon<span class="sc">}</span><span class="ss">) is: </span><span class="sc">{</span><span class="bu">round</span>(sand)<span class="sc">}</span><span class="ss"> %'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="a2190855-c9ec-413f-8382-048cc17047de" class="cell" data-execution_count="44">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'The percentage of sand at (</span><span class="sc">{</span>lat<span class="sc">}</span><span class="ss">,</span><span class="sc">{</span>lon<span class="sc">}</span><span class="ss">) is: </span><span class="sc">{</span><span class="bu">round</span>(sand)<span class="sc">}</span><span class="ss"> %'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>The percentage of sand at (37.839154,-99.101594) is: 53 %</code></pre>
+<pre><code>The percentage of sand at (7.1193,-73.1227) is: 29 %</code></pre>
 </div>
 </div>
 
