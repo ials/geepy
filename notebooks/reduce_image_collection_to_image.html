@@ -274,7 +274,11 @@ gtag('config', 'G-H7B15Q02BW', { 'anonymize_ip': true});
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#define-helper-functions" id="toc-define-helper-functions" class="nav-link active" data-scroll-target="#define-helper-functions">Define helper functions</a></li>
+  <li><a href="#define-helper-functions" id="toc-define-helper-functions" class="nav-link active" data-scroll-target="#define-helper-functions">Define helper functions</a>
+  <ul class="collapse">
+  <li><a href="#save-images-to-local-drive" id="toc-save-images-to-local-drive" class="nav-link" data-scroll-target="#save-images-to-local-drive">Save images to local drive</a></li>
+  <li><a href="#save-features-to-local-drive" id="toc-save-features-to-local-drive" class="nav-link" data-scroll-target="#save-features-to-local-drive">Save features to local drive</a></li>
+  </ul></li>
   <li><a href="#the-gaul-dataset" id="toc-the-gaul-dataset" class="nav-link" data-scroll-target="#the-gaul-dataset">The GAUL Dataset</a></li>
   <li><a href="#global-precipitation" id="toc-global-precipitation" class="nav-link" data-scroll-target="#global-precipitation">Global Precipitation</a></li>
   <li><a href="#example-1-sum-reducers" id="toc-example-1-sum-reducers" class="nav-link" data-scroll-target="#example-1-sum-reducers">Example 1: Sum reducers</a></li>
@@ -332,12 +336,13 @@ gtag('config', 'G-H7B15Q02BW', { 'anonymize_ip': true});
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> ee</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> xarray <span class="im">as</span> xr</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib <span class="im">import</span> colors, colormaps</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> geopandas <span class="im">as</span> gpd</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> xarray <span class="im">as</span> xr</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib <span class="im">import</span> colors, colormaps</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="1984adcf-5cf0-4938-8608-6385727c223f" class="cell" data-execution_count="4">
+<div id="1984adcf-5cf0-4938-8608-6385727c223f" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Trigger the authentication flow.</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">#ee.Authenticate(auth_mode='localhost')</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -346,11 +351,13 @@ gtag('config', 'G-H7B15Q02BW', { 'anonymize_ip': true});
 </div>
 <section id="define-helper-functions" class="level2">
 <h2 class="anchored" data-anchor-id="define-helper-functions">Define helper functions</h2>
-<div id="a1ddba27-37bd-41e0-a320-58d959bd75a9" class="cell" data-execution_count="5">
+<section id="save-images-to-local-drive" class="level3">
+<h3 class="anchored" data-anchor-id="save-images-to-local-drive">Save images to local drive</h3>
+<div id="a1ddba27-37bd-41e0-a320-58d959bd75a9" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define function to save images to the local drive </span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> save_geotiff(ee_image, filename, crs, scale, geom, bands<span class="op">=</span>[]):</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">    Function to save images from Google Earth Engine into local hard drive.</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">    Function to save images from GEE into local hard drive.</span></span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    image_url <span class="op">=</span> ee_image.getDownloadUrl({<span class="st">'region'</span>: geom,<span class="st">'scale'</span>:scale, </span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>                                         <span class="st">'bands'</span>: bands,</span>
@@ -366,6 +373,29 @@ gtag('config', 'G-H7B15Q02BW', { 'anonymize_ip': true});
 <span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="bu">print</span>(<span class="st">'Saved image'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
+<section id="save-features-to-local-drive" class="level3">
+<h3 class="anchored" data-anchor-id="save-features-to-local-drive">Save features to local drive</h3>
+<div id="a5009562-a43b-48fc-aac4-28a24a8538c1" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> save_table(ee_feature_collection, filename):</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Save an Earth Engine FeatureCollection to a local GeoJSON or CSV file.</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># ee_feature_collection must be a FeatureCollection</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    url <span class="op">=</span> ee_feature_collection.getDownloadURL(</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>        filetype<span class="op">=</span><span class="st">'geojson'</span>,    <span class="co"># or 'csv'</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>        filename<span class="op">=</span><span class="st">'stder_sismos25'</span>  <span class="co"># name on the server side; extension is added automatically</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    r <span class="op">=</span> requests.get(url)</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    r.raise_for_status()</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> <span class="bu">open</span>(filename, <span class="st">'wb'</span>) <span class="im">as</span> f:</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>        f.write(r.content)</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Saved table to </span><span class="sc">{</span>filename<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
 <section id="the-gaul-dataset" class="level2">
 <h2 class="anchored" data-anchor-id="the-gaul-dataset">The GAUL Dataset</h2>
 <p>The Global Administrative Unit Layers (GAUL) dataset is developed and owned by the Food and Agriculture Organization of the United Nations (FAO). It provides a comprehensive spatial dataset of sub-national administrative units for all countries in the world, consistent with the United Nations (UN) delineation of international boundaries.</p>
@@ -376,10 +406,10 @@ gtag('config', 'G-H7B15Q02BW', { 'anonymize_ip': true});
 <li>Level 2: Second-level administrative units (e.g., districts, counties)</li>
 </ul>
 <p>Level 1 boundaries are readily available in Google Earth Engine.</p>
-<div id="6e999438-eb17-47a7-8f66-aed1b44641c5" class="cell" data-execution_count="6">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">## Load the GAUL Level 1 dataset</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>level1 <span class="op">=</span> ee.FeatureCollection(<span class="st">"projects/sat-io/open-datasets/FAO/GAUL/GAUL_2024_L1"</span>)<span class="op">;</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'GAUL Level 1 collection'</span>, level1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="6e999438-eb17-47a7-8f66-aed1b44641c5" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">## Load the GAUL Level 1 dataset</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>level1 <span class="op">=</span> ee.FeatureCollection(<span class="st">"projects/sat-io/open-datasets/FAO/GAUL/GAUL_2024_L1"</span>)<span class="op">;</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'GAUL Level 1 collection'</span>, level1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>GAUL Level 1 collection ee.FeatureCollection({
   "functionInvocationValue": {
@@ -393,21 +423,21 @@ gtag('config', 'G-H7B15Q02BW', { 'anonymize_ip': true});
 })</code></pre>
 </div>
 </div>
-<div id="d9b56886-443c-4472-a517-008d3c979bcb" class="cell" data-execution_count="7">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Aggregate all unique names from the 'ADM0_NAME' property into a list</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># The .distinct() call ensures only unique names are collected, avoiding duplicates</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># for territories that might have separate entries (e.g., 'Portugal' and 'Madeira Islands').</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>country_names_list_gee <span class="op">=</span> level1.distinct(<span class="st">"gaul0_name"</span>).aggregate_array(<span class="st">"gaul0_name"</span>)</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Sort the list using GEE's ee.List.sort() method</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>sorted_country_names_gee <span class="op">=</span> country_names_list_gee.sort()</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Use .getInfo() to transfer the list from the GEE server to your local Python environment</span></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>country_names <span class="op">=</span> sorted_country_names_gee.getInfo()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="d9b56886-443c-4472-a517-008d3c979bcb" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Aggregate all unique names from the 'ADM0_NAME' property into a list</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co"># The .distinct() call ensures only unique names are collected, avoiding duplicates</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co"># for territories that might have separate entries (e.g., 'Portugal' and 'Madeira Islands').</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>country_names_list_gee <span class="op">=</span> level1.distinct(<span class="st">"gaul0_name"</span>).aggregate_array(<span class="st">"gaul0_name"</span>)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Sort the list using GEE's ee.List.sort() method</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>sorted_country_names_gee <span class="op">=</span> country_names_list_gee.sort()</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Use .getInfo() to transfer the list from the GEE server to your local Python environment</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>country_names <span class="op">=</span> sorted_country_names_gee.getInfo()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="6d3d0426-59b1-432d-a89f-53bd1975ee28" class="cell" data-execution_count="8">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>country_names</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="8">
+<div id="6d3d0426-59b1-432d-a89f-53bd1975ee28" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>country_names</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="14">
 <pre><code>['Abyei',
  'Afghanistan',
  'Akrotiri',
@@ -682,26 +712,26 @@ gtag('config', 'G-H7B15Q02BW', { 'anonymize_ip': true});
  'Åland Islands']</code></pre>
 </div>
 </div>
-<div id="bc9c0413-4c49-40b2-8df1-d8115ef16165" class="cell" data-execution_count="9">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Select a single country </span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>country_name <span class="op">=</span> <span class="st">'Colombia'</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Get  Colombia's departments</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>COL_deptos <span class="op">=</span> level1.<span class="bu">filter</span>(ee.Filter.eq(<span class="st">'gaul0_name'</span>, country_name))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="bc9c0413-4c49-40b2-8df1-d8115ef16165" class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Select a single country </span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>country_name <span class="op">=</span> <span class="st">'Colombia'</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Get  Colombia's departments</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>COL_deptos <span class="op">=</span> level1.<span class="bu">filter</span>(ee.Filter.eq(<span class="st">'gaul0_name'</span>, country_name))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="fe4b5ac8-6a78-4092-9af4-d783fe83ff4b" class="cell" data-execution_count="10">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>lista <span class="op">=</span> COL_deptos.distinct(<span class="st">"gaul1_name"</span>).aggregate_array(<span class="st">"gaul1_name"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="fe4b5ac8-6a78-4092-9af4-d783fe83ff4b" class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>lista <span class="op">=</span> COL_deptos.distinct(<span class="st">"gaul1_name"</span>).aggregate_array(<span class="st">"gaul1_name"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="b749f6b0-3ba2-48d0-a7bd-62ffb815e30a" class="cell" data-execution_count="11">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Sort the list using GEE's ee.List.sort() method</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>sorted_deptos <span class="op">=</span> lista.sort()</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Use .getInfo() to transfer the list from the GEE server to your local Python environment</span></span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>deptos <span class="op">=</span> sorted_deptos.getInfo()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="b749f6b0-3ba2-48d0-a7bd-62ffb815e30a" class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Sort the list using GEE's ee.List.sort() method</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>sorted_deptos <span class="op">=</span> lista.sort()</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Use .getInfo() to transfer the list from the GEE server to your local Python environment</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>deptos <span class="op">=</span> sorted_deptos.getInfo()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="4beb9115-5da9-4a4f-bb87-1413f94196eb" class="cell" data-execution_count="12">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>deptos</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="12">
+<div id="4beb9115-5da9-4a4f-bb87-1413f94196eb" class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>deptos</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="18">
 <pre><code>['Amazonas',
  'Antioquia',
  'Arauca',
@@ -737,12 +767,18 @@ gtag('config', 'G-H7B15Q02BW', { 'anonymize_ip': true});
  'Vichada']</code></pre>
 </div>
 </div>
-<div id="3b8abb49-2768-4e66-a7a4-52550d22ce45" class="cell" data-execution_count="13">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Select Santander</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>region <span class="op">=</span> COL_deptos.<span class="bu">filter</span>(ee.Filter.eq(<span class="st">'gaul1_name'</span>,<span class="st">'Santander'</span>))</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Create mask</span></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>mask <span class="op">=</span> ee.Image.constant(<span class="dv">1</span>).clip(region).mask()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="3b8abb49-2768-4e66-a7a4-52550d22ce45" class="cell" data-execution_count="43">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Select Santander</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>region <span class="op">=</span> COL_deptos.<span class="bu">filter</span>(ee.Filter.eq(<span class="st">'gaul1_name'</span>,<span class="st">'Santander'</span>))</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Create mask</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>mask <span class="op">=</span> ee.Image.constant(<span class="dv">1</span>).clip(region).mask()</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Save region</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>save_table(region, <span class="st">"../outputs/stder.geojson"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Saved table to ../outputs/stder.geojson</code></pre>
+</div>
 </div>
 </section>
 <section id="global-precipitation" class="level2">
@@ -752,15 +788,15 @@ gtag('config', 'G-H7B15Q02BW', { 'anonymize_ip': true});
 <p>Estimating rainfall variations in space and time is a key aspect of drought early warning and environmental monitoring. An evolving drier-than-normal season must be placed in a historical context so that the severity of rainfall deficits can be quickly evaluated.</p>
 <p>However, estimates derived from satellite data provide areal averages that suffer from biases due to complex terrain, which often underestimate the intensity of extreme precipitation events. Conversely, precipitation grids produced from station data suffer in more rural regions where there are less rain-gauge stations. CHIRPS was created in collaboration with scientists at the USGS Earth Resources Observation and Science (EROS) Center in order to deliver complete, reliable, up-to-date data sets for a number of early warning objectives, like trend analysis and seasonal drought monitoring.</p>
 <p>Early research focused on combining models of terrain-induced precipitation enhancement with interpolated station data. More recently, new resources of satellite observations like gridded satellite-based precipitation estimates from NASA and NOAA have been leveraged to build high resolution (0.05°) gridded precipitation climatologies. When applied to satellite-based precipitation fields, these improved climatologies can remove systematic bias—a key technique in the production of the 1981 to near-present CHIRPS data set.</p>
-<div id="3ff887cd-a5b0-48eb-a19d-8a0dc3f06cf3" class="cell" data-execution_count="14">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co">#precip = ee.ImageCollection('projects/climate-engine-pro/assets/ce-gpm-imerg-daily').filterDate('2025-01-01', '2025-12-31')</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="3ff887cd-a5b0-48eb-a19d-8a0dc3f06cf3" class="cell" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co">#precip = ee.ImageCollection('projects/climate-engine-pro/assets/ce-gpm-imerg-daily').filterDate('2025-01-01', '2025-12-31')</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="2b24108d-c4ba-4d04-94be-3933a5ac9a7e" class="cell" data-execution_count="15">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>date1 <span class="op">=</span> ee.Date(<span class="st">'2025-01-01'</span>) <span class="co">#.getRange('day')</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>date2 <span class="op">=</span> ee.Date(<span class="st">'2025-12-31'</span>) <span class="co">#.getRange('day')</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="2b24108d-c4ba-4d04-94be-3933a5ac9a7e" class="cell" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>date1 <span class="op">=</span> ee.Date(<span class="st">'2025-01-01'</span>) <span class="co">#.getRange('day')</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>date2 <span class="op">=</span> ee.Date(<span class="st">'2025-12-31'</span>) <span class="co">#.getRange('day')</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="1316ab38-efa2-4d65-b740-98255f4fe48c" class="cell" data-execution_count="16">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>precip  <span class="op">=</span> ee.ImageCollection(<span class="st">'UCSB-CHG/CHIRPS/DAILY'</span>).filterDate(date1, date2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="1316ab38-efa2-4d65-b740-98255f4fe48c" class="cell" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>precip  <span class="op">=</span> ee.ImageCollection(<span class="st">'UCSB-CHG/CHIRPS/DAILY'</span>).filterDate(date1, date2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="example-1-sum-reducers" class="level2">
@@ -779,8 +815,8 @@ Note
 <p>The <code>clip()</code> method only affects the visualization of the image in Google Earth Engine. To ensure the image is clipped in the exported GeoTIFF, we need to explicitly apply the mask.</p>
 </div>
 </div>
-<div id="da9fbc00-d2f3-48fc-bd48-d7eebd1a2bc9" class="cell" data-execution_count="17">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>precip_image <span class="op">=</span> precip.select(<span class="st">'precipitation'</span>).<span class="bu">reduce</span>(ee.Reducer.<span class="bu">sum</span>()).mask(mask)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="da9fbc00-d2f3-48fc-bd48-d7eebd1a2bc9" class="cell" data-execution_count="23">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>precip_image <span class="op">=</span> precip.select(<span class="st">'precipitation'</span>).<span class="bu">reduce</span>(ee.Reducer.<span class="bu">sum</span>()).mask(mask)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -795,30 +831,30 @@ Note
 <p>The result of applying a reducer to an ImageCollection is an Image.</p>
 </div>
 </div>
-<div id="19a861d4-3a45-4292-aef5-1ed25a4dcf3c" class="cell" data-execution_count="18">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="bu">type</span>(precip_image)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="18">
+<div id="19a861d4-3a45-4292-aef5-1ed25a4dcf3c" class="cell" data-execution_count="24">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="bu">type</span>(precip_image)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="24">
 <pre><code>ee.image.Image</code></pre>
 </div>
 </div>
-<div id="b5bc21aa-ab0f-49fb-a32d-438fc22ec4c1" class="cell" data-execution_count="19">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Save geotiff</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>precip_filename <span class="op">=</span> <span class="st">'../outputs/stder_rainfall_2025.tif'</span></span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>save_geotiff(precip_image, precip_filename, crs<span class="op">=</span><span class="dv">4326</span>, scale<span class="op">=</span><span class="dv">5_000</span>, geom<span class="op">=</span>region.geometry())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="b5bc21aa-ab0f-49fb-a32d-438fc22ec4c1" class="cell" data-execution_count="25">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Save geotiff</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>precip_filename <span class="op">=</span> <span class="st">'../outputs/stder_rainfall_2025.tif'</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>save_geotiff(precip_image, precip_filename, crs<span class="op">=</span><span class="dv">4326</span>, scale<span class="op">=</span><span class="dv">5_000</span>, geom<span class="op">=</span>region.geometry())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Saved image</code></pre>
 </div>
 </div>
-<div id="3d19e09f-6558-467a-8e67-c8a53e29458e" class="cell" data-execution_count="20">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Read saved geotiff image</span></span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>precip_raster <span class="op">=</span> xr.open_dataarray(precip_filename).squeeze()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="3d19e09f-6558-467a-8e67-c8a53e29458e" class="cell" data-execution_count="26">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Read saved geotiff image</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>precip_raster <span class="op">=</span> xr.open_dataarray(precip_filename).squeeze()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="77b8cb7a-31c4-454d-9725-3a320bc1ade6" class="cell" data-execution_count="21">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get coordinates of the depto geometry</span></span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame(region.first().getInfo()[<span class="st">'geometry'</span>][<span class="st">'coordinates'</span>][<span class="dv">0</span>])</span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>df.columns <span class="op">=</span> [<span class="st">'lon'</span>,<span class="st">'lat'</span>]</span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>df.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="21">
+<div id="77b8cb7a-31c4-454d-9725-3a320bc1ade6" class="cell" data-execution_count="27">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get coordinates of the depto geometry</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame(region.first().getInfo()[<span class="st">'geometry'</span>][<span class="st">'coordinates'</span>][<span class="dv">0</span>])</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>df.columns <span class="op">=</span> [<span class="st">'lon'</span>,<span class="st">'lat'</span>]</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>df.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="27">
 <div>
 
 
@@ -862,36 +898,17 @@ Note
 </div>
 </div>
 </div>
-<div id="8431aedc-eb4d-4661-96ce-42f9516341ce" class="cell" data-execution_count="23">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create figure</span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>precip_raster.plot.imshow(figsize<span class="op">=</span>(<span class="dv">6</span>,<span class="dv">5</span>), cmap<span class="op">=</span><span class="st">'Spectral'</span>, add_colorbar<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>                   cbar_kwargs<span class="op">=</span>{<span class="st">'label'</span>:<span class="st">'Precipitation (mm)'</span>})</span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>plt.plot(df[<span class="st">'lon'</span>], df[<span class="st">'lat'</span>],<span class="st">'-k'</span>)</span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Santander Precipitation 2025'</span>)</span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Longitude'</span>)</span>
-<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Latitude'</span>)</span>
-<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a><span class="co">#plt.axis('equal')</span></span>
-<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
-<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="reduce_image_collection_to_image_files/figure-html/cell-21-output-1.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
-<div id="3a50c377-df05-43d4-9098-968630874d0c" class="cell" data-execution_count="25">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create contour figure</span></span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>precip_raster.plot.contourf(figsize<span class="op">=</span>(<span class="dv">6</span>,<span class="dv">6</span>), cmap<span class="op">=</span><span class="st">'Spectral'</span>, add_colorbar<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>                   cbar_kwargs<span class="op">=</span>{<span class="st">'label'</span>:<span class="st">'Precipitation (mm)'</span>})</span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>plt.plot(df[<span class="st">'lon'</span>], df[<span class="st">'lat'</span>],<span class="st">'-k'</span>)</span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Santander Precipitation 2025'</span>)</span>
-<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Longitude'</span>)</span>
-<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Latitude'</span>)</span>
-<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a><span class="co">#plt.axis('equal')</span></span>
-<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
-<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="8431aedc-eb4d-4661-96ce-42f9516341ce" class="cell" data-execution_count="28">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create figure</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>precip_raster.plot.imshow(figsize<span class="op">=</span>(<span class="dv">6</span>,<span class="dv">5</span>), cmap<span class="op">=</span><span class="st">'Spectral'</span>, add_colorbar<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>                   cbar_kwargs<span class="op">=</span>{<span class="st">'label'</span>:<span class="st">'Precipitation (mm)'</span>})</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>plt.plot(df[<span class="st">'lon'</span>], df[<span class="st">'lat'</span>],<span class="st">'-k'</span>)</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Santander Precipitation 2025'</span>)</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Longitude'</span>)</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Latitude'</span>)</span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a><span class="co">#plt.axis('equal')</span></span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -900,12 +917,31 @@ Note
 </div>
 </div>
 </div>
-<div id="b58940b1-43c1-47d2-88bb-b42a24edfe74" class="cell" data-execution_count="27">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Find min and max precipitation</span></span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>precip_image.reduceRegion(reducer <span class="op">=</span> ee.Reducer.minMax(),</span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>                        geometry <span class="op">=</span> region.geometry(),</span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>                        scale <span class="op">=</span> <span class="dv">4_000</span>).getInfo()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="27">
+<div id="3a50c377-df05-43d4-9098-968630874d0c" class="cell" data-execution_count="29">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create contour figure</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>precip_raster.plot.contourf(figsize<span class="op">=</span>(<span class="dv">6</span>,<span class="dv">6</span>), cmap<span class="op">=</span><span class="st">'Spectral'</span>, add_colorbar<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>                   cbar_kwargs<span class="op">=</span>{<span class="st">'label'</span>:<span class="st">'Precipitation (mm)'</span>})</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>plt.plot(df[<span class="st">'lon'</span>], df[<span class="st">'lat'</span>],<span class="st">'-k'</span>)</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Santander Precipitation 2025'</span>)</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Longitude'</span>)</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Latitude'</span>)</span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a><span class="co">#plt.axis('equal')</span></span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="reduce_image_collection_to_image_files/figure-html/cell-23-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="b58940b1-43c1-47d2-88bb-b42a24edfe74" class="cell" data-execution_count="30">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Find min and max precipitation</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>precip_image.reduceRegion(reducer <span class="op">=</span> ee.Reducer.minMax(),</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>                        geometry <span class="op">=</span> region.geometry(),</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>                        scale <span class="op">=</span> <span class="dv">4_000</span>).getInfo()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="30">
 <pre><code>{'precipitation_sum_max': 3505.1822959035635,
  'precipitation_sum_min': 716.9459464780812}</code></pre>
 </div>
@@ -926,55 +962,89 @@ Tip
 </section>
 <section id="example-2-min-reducer" class="level2">
 <h2 class="anchored" data-anchor-id="example-2-min-reducer">Example 2: Min Reducer</h2>
-<p>The <code>.min()</code> reducer finds the minimum value. In this example we will determine the minimum and maximum land surface teperatures.</p>
-<div id="8a8d70f0-153e-4679-9e47-89be9ff63f93" class="cell" data-execution_count="56">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Read US states</span></span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>US_states <span class="op">=</span> ee.FeatureCollection(<span class="st">"TIGER/2018/States"</span>)</span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Select Kansas</span></span>
-<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>region <span class="op">=</span> US_states.<span class="bu">filter</span>(ee.Filter.eq(<span class="st">'NAME'</span>,<span class="st">'Kansas'</span>))</span>
-<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Create mask</span></span>
-<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>mask <span class="op">=</span> ee.Image.constant(<span class="dv">1</span>).clip(region).mask()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The <code>.min()</code> reducer finds the minimum value. In this example we will determine the minimum and maximum land surface temperatures.</p>
+<p>While CHIRPS is famous for precipitation, Google Earth Engine also hosts related temperature datasets from the same source, like CHIRTS-daily, offering high-resolution daily minimum (Tmin) and maximum (Tmax) 2-meter temperatures, perfect for analyzing temperature trends, drought impacts, and climate variations. You can access and analyze these datasets within the GEE platform by searching for chg or temperature tags, allowing for filtering by region, time, and variable, and exporting results for further GIS analysis.</p>
+<div id="ce75898e-ba08-4192-b91f-a662d870d52f" class="cell" data-execution_count="31">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load an image collection from CHIRTS</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>chirts <span class="op">=</span> ee.ImageCollection(<span class="st">"UCSB-CHG/CHIRTS/DAILY"</span>).filterDate(<span class="st">'2010-01-01'</span>, <span class="st">'2025-12-31'</span>).filterBounds(region)</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>tmin_img <span class="op">=</span> chirts.select(<span class="st">'minimum_temperature'</span>).<span class="bu">reduce</span>(ee.Reducer.<span class="bu">min</span>()).mask(mask)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="ce75898e-ba08-4192-b91f-a662d870d52f" class="cell" data-execution_count="57">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load an image collection from PRISM</span></span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>prism <span class="op">=</span> ee.ImageCollection(<span class="st">'OREGONSTATE/PRISM/AN81d'</span>).filterDate(<span class="st">'2010-01-01'</span>, <span class="st">'2020-12-31'</span>).filterBounds(region)</span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>tmin_img <span class="op">=</span> prism.select(<span class="st">'tmin'</span>).<span class="bu">reduce</span>(ee.Reducer.<span class="bu">min</span>()).mask(mask)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div id="20a9f716-a370-4f7b-b480-00f2df5d508c" class="cell" data-execution_count="58">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Save geotiff</span></span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>tmin_filename <span class="op">=</span> <span class="st">'../outputs/kansas_tmin_2010_2020.tif'</span></span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>save_geotiff(tmin_img, tmin_filename, crs<span class="op">=</span><span class="dv">4326</span>, scale<span class="op">=</span><span class="dv">4000</span>, geom<span class="op">=</span>region.geometry())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="20a9f716-a370-4f7b-b480-00f2df5d508c" class="cell" data-execution_count="32">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Save geotiff</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>tmin_filename <span class="op">=</span> <span class="st">'../outputs/stder_tmin_2010_2025.tif'</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>save_geotiff(tmin_img, tmin_filename, crs<span class="op">=</span><span class="dv">4326</span>, scale<span class="op">=</span><span class="dv">4000</span>, geom<span class="op">=</span>region.geometry())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Saved image</code></pre>
 </div>
 </div>
-<div id="0d72eb42-4633-404e-b5fc-8e23cda33302" class="cell" data-execution_count="59">
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Read saved geotiff image</span></span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>tmin_raster <span class="op">=</span> xr.open_dataarray(tmin_filename).squeeze()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="0d72eb42-4633-404e-b5fc-8e23cda33302" class="cell" data-execution_count="33">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Read saved geotiff image</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>tmin_raster <span class="op">=</span> xr.open_dataarray(tmin_filename).squeeze()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="39c2522d-04a0-44c7-9603-76556a49c79c" class="cell" data-execution_count="60">
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get the dictionary with all the metadata into a variable</span></span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Print this variable to see the details</span></span>
-<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>region_metadata <span class="op">=</span> region.first().getInfo()</span>
-<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Get coordinates of the county geometry</span></span>
-<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame(region_metadata[<span class="st">'geometry'</span>][<span class="st">'geometries'</span>][<span class="dv">1</span>][<span class="st">'coordinates'</span>][<span class="dv">0</span>])</span>
-<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>df.columns <span class="op">=</span> [<span class="st">'lon'</span>,<span class="st">'lat'</span>]</span>
-<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="39c2522d-04a0-44c7-9603-76556a49c79c" class="cell" data-execution_count="34">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get the dictionary with all the metadata into a variable</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Print this variable to see the details</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>region_metadata <span class="op">=</span> region.first().getInfo()</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Get coordinates of the county geometry</span></span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame(region_metadata[<span class="st">'geometry'</span>][<span class="st">'coordinates'</span>][<span class="dv">0</span>])</span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>df.columns <span class="op">=</span> [<span class="st">'lon'</span>,<span class="st">'lat'</span>]</span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>df.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="34">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">lon</th>
+<th data-quarto-table-cell-role="th">lat</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>-74.526570</td>
+<td>6.273643</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>-74.526360</td>
+<td>6.270401</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>-74.525246</td>
+<td>6.260569</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>-74.520738</td>
+<td>6.246839</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>-74.512586</td>
+<td>6.225850</td>
+</tr>
+</tbody>
+</table>
+
 </div>
-<div id="b647c560-e58a-4743-ba21-7805698cbdb5" class="cell" data-execution_count="61">
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create figure</span></span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>tmin_raster.plot.imshow(figsize<span class="op">=</span>(<span class="dv">6</span>,<span class="dv">3</span>), cmap<span class="op">=</span><span class="st">'cool_r'</span>, add_colorbar<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>                   cbar_kwargs<span class="op">=</span>{<span class="st">'label'</span>:<span class="st">'Temperature (Celsius)'</span>})</span>
-<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>plt.plot(df[<span class="st">'lon'</span>], df[<span class="st">'lat'</span>],<span class="st">'-k'</span>)</span>
-<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Kansas Air Temperature 2010-2020'</span>)</span>
-<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Longitude'</span>)</span>
-<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Latitude'</span>)</span>
-<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a><span class="co">#plt.axis('equal')</span></span>
-<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
-<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div id="b647c560-e58a-4743-ba21-7805698cbdb5" class="cell" data-execution_count="35">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create figure</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>tmin_raster.plot.imshow(figsize<span class="op">=</span>(<span class="dv">6</span>,<span class="dv">6</span>), cmap<span class="op">=</span><span class="st">'cool_r'</span>, add_colorbar<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>                   cbar_kwargs<span class="op">=</span>{<span class="st">'label'</span>:<span class="st">'Temperature (Celsius)'</span>})</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>plt.plot(df[<span class="st">'lon'</span>], df[<span class="st">'lat'</span>],<span class="st">'-k'</span>)</span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Santander Temperature 2010-2020'</span>)</span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Longitude'</span>)</span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Latitude'</span>)</span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a><span class="co">#plt.axis('equal')</span></span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -983,13 +1053,13 @@ Tip
 </div>
 </div>
 </div>
-<div id="3fe10529-8acd-49eb-b5e8-dd405647f26d" class="cell" data-execution_count="62">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Find lowest temperature</span></span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>tmin_img.reduceRegion(reducer <span class="op">=</span> ee.Reducer.<span class="bu">min</span>(),</span>
-<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>                        geometry <span class="op">=</span> region.geometry(),</span>
-<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>                        scale <span class="op">=</span> <span class="dv">4_000</span>).getInfo()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="62">
-<pre><code>{'tmin_min': -30.395000457763672}</code></pre>
+<div id="3fe10529-8acd-49eb-b5e8-dd405647f26d" class="cell" data-execution_count="36">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Find lowest temperature</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>tmin_img.reduceRegion(reducer <span class="op">=</span> ee.Reducer.<span class="bu">min</span>(),</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>                        geometry <span class="op">=</span> region.geometry(),</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>                        scale <span class="op">=</span> <span class="dv">4_000</span>).getInfo()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="36">
+<pre><code>{'minimum_temperature_min': 0.4195217490196228}</code></pre>
 </div>
 </div>
 <blockquote class="blockquote">
@@ -998,30 +1068,12 @@ Tip
 </section>
 <section id="example-4-max-reducer" class="level2">
 <h2 class="anchored" data-anchor-id="example-4-max-reducer">Example 4: Max reducer</h2>
-<p>The <code>.max()</code> reducer find the maximum value. In this example we will use it to find the total spatial extent burned by wildfires over multiple days in southwest Kansas and northwest Oklahoma.</p>
-<p>The Starbuck wildfire occurred in March 2017 and stands as one of the largest wildfires in Kansas history. The Starbuck wildfire started in Beaver county in Oklahoma and then spread across multiple Kansas counties, including Meade, Clark, and Comanche counties, ravaging over 662,000 acres of land that included ranches and residential areas. The fire’s magnitude was so extensive that it not only caused significant ecological damage but also resulted in the loss of numerous cattle, property destruction, and challenged the resilience of local communities. The Starbuck wildfire highlighted the importance of community solidarity, the challenges of managing fire risk in rural regions, and the necessity for improved fire management, preparedness, and mitigation strategies.</p>
-<div id="20b95f88-0988-46fb-916f-13fd1801d289" class="cell" data-execution_count="8">
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the US county boundaries.</span></span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>counties <span class="op">=</span> ee.FeatureCollection(<span class="st">'TIGER/2016/Counties'</span>)<span class="op">;</span></span>
-<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter the counties by name and state (Kansas FIPS code is "20")</span></span>
-<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>ks_counties <span class="op">=</span> counties.<span class="bu">filter</span>(ee.Filter.Or(ee.Filter.eq(<span class="st">'NAME'</span>, <span class="st">'Clark'</span>),</span>
-<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>                                           ee.Filter.eq(<span class="st">'NAME'</span>, <span class="st">'Meade'</span>),</span>
-<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>                                           ee.Filter.eq(<span class="st">'NAME'</span>, <span class="st">'Comanche'</span>))).<span class="bu">filter</span>(ee.Filter.eq(<span class="st">'STATEFP'</span>, <span class="st">'20'</span>)) </span>
-<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter the counties by name and state (Oklahoma FIPS code is "40")</span></span>
-<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a>ok_counties <span class="op">=</span> counties.<span class="bu">filter</span>(ee.Filter.Or(ee.Filter.eq(<span class="st">'NAME'</span>, <span class="st">'Beaver'</span>),</span>
-<span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a>                                           ee.Filter.eq(<span class="st">'NAME'</span>, <span class="st">'Harper'</span>))).<span class="bu">filter</span>(ee.Filter.eq(<span class="st">'STATEFP'</span>, <span class="st">'40'</span>)) </span>
-<span id="cb38-12"><a href="#cb38-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-13"><a href="#cb38-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-14"><a href="#cb38-14" aria-hidden="true" tabindex="-1"></a><span class="co">## Combine the selected counties into a single geometry.</span></span>
-<span id="cb38-15"><a href="#cb38-15" aria-hidden="true" tabindex="-1"></a>region <span class="op">=</span> ks_counties.merge(ok_counties)</span>
-<span id="cb38-16"><a href="#cb38-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-17"><a href="#cb38-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Combined counties (not use in the tutorial)</span></span>
-<span id="cb38-18"><a href="#cb38-18" aria-hidden="true" tabindex="-1"></a>region_union <span class="op">=</span> region.union()</span>
-<span id="cb38-19"><a href="#cb38-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-20"><a href="#cb38-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Get bounding box of combined geometry</span></span>
-<span id="cb38-21"><a href="#cb38-21" aria-hidden="true" tabindex="-1"></a>bbox <span class="op">=</span> region.geometry().bounds()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The <code>.max()</code> reducer find the maximum value. In this example we will use it to find seismic events in Santander.</p>
+<p>The USGS Earthquake Hazards Program (EHP) offers a comprehensive earthquake dataset, serving as a valuable resource for monitoring, research, and earthquake preparedness worldwide. This dataset encompasses information about earthquakes from various sources, including seismic stations, satellite imagery, and ground-based observations. Continuously updated, it contains a staggering collection of millions of records of earthquakes from daily aggregates.</p>
+<p>The USGS earthquake dataset serves a multitude of purposes, including earthquake hazard assessment, which aids in identifying earthquake-prone regions and evaluating potential impacts on communities. Additionally, it supports the development of earthquake early warning systems, enabling timely alerts to mitigate disaster. Furthermore, the dataset is instrumental in the creation of earthquake preparedness and response plans, enhancing community resilience. Lastly, it fuels earthquake research endeavors, facilitating investigations into earthquake hazards and mitigation strategies.</p>
+<div id="20b95f88-0988-46fb-916f-13fd1801d289" class="cell" data-execution_count="37">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get bounding box of combined geometry</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>bbox <span class="op">=</span> region.geometry().bounds()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -1036,53 +1088,545 @@ Note
 <p>For combining FeatureCollections we use the <code>merge()</code> method. To combine geometries or features within a FeatureCollection we use the <code>.union()</code> method.</p>
 </div>
 </div>
-<div id="26cc1cf0-31c3-4957-8adc-dea252364e20" class="cell" data-execution_count="96">
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load modis product</span></span>
-<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>modis <span class="op">=</span> ee.ImageCollection(<span class="st">'MODIS/061/MOD14A1'</span>).filterDate(<span class="st">'2017-03-01'</span>, <span class="st">'2017-03-31'</span>)</span>
-<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>max_fire <span class="op">=</span> modis.select(<span class="st">'FireMask'</span>).<span class="bu">reduce</span>(ee.Reducer.<span class="bu">max</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="26cc1cf0-31c3-4957-8adc-dea252364e20" class="cell" data-execution_count="38">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load USGS earthquakes product</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>sismos <span class="op">=</span> ee.FeatureCollection(<span class="st">"projects/sat-io/open-datasets/USGS/usgs_earthquakes"</span>)</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>sismos25 <span class="op">=</span> sismos.filterDate(<span class="st">'2025-01-01'</span>, <span class="st">'2025-12-31'</span>).filterBounds(region)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="31c4df81-b56e-4d70-afc9-e75cdcb9abba" class="cell" data-execution_count="106">
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Save GeoTIFF</span></span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>max_fire_filename <span class="op">=</span> <span class="st">'../outputs/starbuck_wildfire_.tiff'</span></span>
-<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>save_geotiff(max_fire, filename<span class="op">=</span>max_fire_filename, crs<span class="op">=</span><span class="dv">4326</span>, scale<span class="op">=</span><span class="dv">1000</span>, </span>
-<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>             geom<span class="op">=</span>bbox, bands<span class="op">=</span>[])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="913379f1-1348-45be-ab95-81b79269b1cf" class="cell" data-execution_count="39">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>sismos25.getInfo()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="39">
+<pre><code>{'type': 'FeatureCollection',
+ 'columns': {'alert': 'String',
+  'cdi': 'Float',
+  'code': 'String',
+  'detail': 'String',
+  'dmin': 'Float',
+  'felt': 'Float',
+  'gap': 'Float',
+  'ids': 'String',
+  'mag': 'Float',
+  'magType': 'String',
+  'mmi': 'Float',
+  'net': 'String',
+  'nst': 'Float',
+  'place': 'String',
+  'rms': 'Float',
+  'sig': 'Integer',
+  'sources': 'String',
+  'status': 'String',
+  'system:index': 'String',
+  'system:time_end': 'Long',
+  'system:time_start': 'Long',
+  'time': 'Long',
+  'title': 'String',
+  'tsunami': 'Integer',
+  'type': 'String',
+  'types': 'String',
+  'tz': 'Float',
+  'updated': 'Long',
+  'url': 'String'},
+ 'version': 1749475006371711,
+ 'id': 'projects/sat-io/open-datasets/USGS/usgs_earthquakes',
+ 'properties': {'system:time_start': -1483228800000,
+  'system:time_end': 1749168000000,
+  'system:asset_size': 92679465},
+ 'features': [{'type': 'Feature',
+   'geometry': {'type': 'Point', 'coordinates': [-73.1497, 6.699700000000001]},
+   'id': '0007000000000000c337',
+   'properties': {'alert': '',
+    'cdi': 3.299999952316284,
+    'code': '6000pz0i',
+    'detail': 'https://earthquake.usgs.gov/fdsnws/event/1/query?eventid=us6000pz0i&amp;format=geojson',
+    'dmin': 0.8050000071525574,
+    'felt': 2,
+    'gap': 113,
+    'ids': ',us6000pz0i,',
+    'mag': 4.5,
+    'magType': 'mb',
+    'mmi': None,
+    'net': 'us',
+    'nst': 57,
+    'place': '4 km NE of Villanueva, Colombia',
+    'rms': 0.8700000047683716,
+    'sig': 312,
+    'sources': ',us,',
+    'status': 'reviewed',
+    'system:time_end': 1742030352076,
+    'system:time_start': 1742030352076,
+    'time': 1742030352076,
+    'title': 'M 4.5 - 4 km NE of Villanueva, Colombia',
+    'tsunami': 0,
+    'type': 'earthquake',
+    'types': ',dyfi,origin,phase-data,',
+    'tz': None,
+    'updated': 1747509598040,
+    'url': 'https://earthquake.usgs.gov/earthquakes/eventpage/us6000pz0i'}},
+  {'type': 'Feature',
+   'geometry': {'type': 'Point', 'coordinates': [-73.0999, 6.698400000000001]},
+   'id': '00070000000000003745',
+   'properties': {'alert': '',
+    'cdi': 1,
+    'code': '7000p9zc',
+    'detail': 'https://earthquake.usgs.gov/fdsnws/event/1/query?eventid=us7000p9zc&amp;format=geojson',
+    'dmin': 0.8009999990463257,
+    'felt': 1,
+    'gap': 45,
+    'ids': ',us7000p9zc,',
+    'mag': 4.599999904632568,
+    'magType': 'mb',
+    'mmi': None,
+    'net': 'us',
+    'nst': 150,
+    'place': '3 km S of Jordán, Colombia',
+    'rms': 0.6800000071525574,
+    'sig': 326,
+    'sources': ',us,',
+    'status': 'reviewed',
+    'system:time_end': 1738213423838,
+    'system:time_start': 1738213423838,
+    'time': 1738213423838,
+    'title': 'M 4.6 - 3 km S of Jordán, Colombia',
+    'tsunami': 0,
+    'type': 'earthquake',
+    'types': ',dyfi,origin,phase-data,',
+    'tz': None,
+    'updated': 1744750524040,
+    'url': 'https://earthquake.usgs.gov/earthquakes/eventpage/us7000p9zc'}},
+  {'type': 'Feature',
+   'geometry': {'type': 'Point', 'coordinates': [-73.8432, 7.3646]},
+   'id': '0007000000000000c14b',
+   'properties': {'alert': '',
+    'cdi': 2.9000000953674316,
+    'code': '7000pymq',
+    'detail': 'https://earthquake.usgs.gov/fdsnws/event/1/query?eventid=us7000pymq&amp;format=geojson',
+    'dmin': 1.6460000276565552,
+    'felt': 2,
+    'gap': 72,
+    'ids': ',us7000pymq,',
+    'mag': 4.599999904632568,
+    'magType': 'mb',
+    'mmi': None,
+    'net': 'us',
+    'nst': 102,
+    'place': '6 km ENE of Puerto Wilches, Colombia',
+    'rms': 1.2200000286102295,
+    'sig': 326,
+    'sources': ',us,',
+    'status': 'reviewed',
+    'system:time_end': 1746960111453,
+    'system:time_start': 1746960111453,
+    'time': 1746960111453,
+    'title': 'M 4.6 - 6 km ENE of Puerto Wilches, Colombia',
+    'tsunami': 0,
+    'type': 'earthquake',
+    'types': ',dyfi,origin,phase-data,',
+    'tz': None,
+    'updated': 1746962195806,
+    'url': 'https://earthquake.usgs.gov/earthquakes/eventpage/us7000pymq'}},
+  {'type': 'Feature',
+   'geometry': {'type': 'Point', 'coordinates': [-73.0927, 6.809800000000001]},
+   'id': '0007000000000000c224',
+   'properties': {'alert': '',
+    'cdi': 3,
+    'code': '6000q6zq',
+    'detail': 'https://earthquake.usgs.gov/fdsnws/event/1/query?eventid=us6000q6zq&amp;format=geojson',
+    'dmin': 2.302999973297119,
+    'felt': 7,
+    'gap': 82,
+    'ids': ',us6000q6zq,',
+    'mag': 4.699999809265137,
+    'magType': 'mww',
+    'mmi': None,
+    'net': 'us',
+    'nst': 80,
+    'place': '8 km N of Jordán, Colombia',
+    'rms': 0.8999999761581421,
+    'sig': 342,
+    'sources': ',us,',
+    'status': 'reviewed',
+    'system:time_end': 1744966121271,
+    'system:time_start': 1744966121271,
+    'time': 1744966121271,
+    'title': 'M 4.7 - 8 km N of Jordán, Colombia',
+    'tsunami': 0,
+    'type': 'earthquake',
+    'types': ',dyfi,origin,phase-data,',
+    'tz': None,
+    'updated': 1747202853664,
+    'url': 'https://earthquake.usgs.gov/earthquakes/eventpage/us6000q6zq'}},
+  {'type': 'Feature',
+   'geometry': {'type': 'Point', 'coordinates': [-73.0887, 6.709399999999999]},
+   'id': '0007000000000000c223',
+   'properties': {'alert': '',
+    'cdi': 3.4000000953674316,
+    'code': '6000q6zz',
+    'detail': 'https://earthquake.usgs.gov/fdsnws/event/1/query?eventid=us6000q6zz&amp;format=geojson',
+    'dmin': 2.2209999561309814,
+    'felt': 9,
+    'gap': 46,
+    'ids': ',us6000q6zz,',
+    'mag': 5.199999809265137,
+    'magType': 'mb',
+    'mmi': None,
+    'net': 'us',
+    'nst': 178,
+    'place': '2 km SSE of Jordán, Colombia',
+    'rms': 0.5600000023841858,
+    'sig': 419,
+    'sources': ',us,',
+    'status': 'reviewed',
+    'system:time_end': 1744972304347,
+    'system:time_start': 1744972304347,
+    'time': 1744972304347,
+    'title': 'M 5.2 - 2 km SSE of Jordán, Colombia',
+    'tsunami': 0,
+    'type': 'earthquake',
+    'types': ',dyfi,origin,phase-data,',
+    'tz': None,
+    'updated': 1747320535316,
+    'url': 'https://earthquake.usgs.gov/earthquakes/eventpage/us6000q6zz'}},
+  {'type': 'Feature',
+   'geometry': {'type': 'Point', 'coordinates': [-73.1237, 6.8592]},
+   'id': '0007000000000000c11c',
+   'properties': {'alert': '',
+    'cdi': None,
+    'code': '6000qgwk',
+    'detail': 'https://earthquake.usgs.gov/fdsnws/event/1/query?eventid=us6000qgwk&amp;format=geojson',
+    'dmin': 0.9610000252723694,
+    'felt': None,
+    'gap': 117,
+    'ids': ',us6000qgwk,',
+    'mag': 4,
+    'magType': 'mb',
+    'mmi': None,
+    'net': 'us',
+    'nst': 55,
+    'place': '14 km NNW of Jordán, Colombia',
+    'rms': 0.5799999833106995,
+    'sig': 246,
+    'sources': ',us,',
+    'status': 'reviewed',
+    'system:time_end': 1747474862410,
+    'system:time_start': 1747474862410,
+    'time': 1747474862410,
+    'title': 'M 4.0 - 14 km NNW of Jordán, Colombia',
+    'tsunami': 0,
+    'type': 'earthquake',
+    'types': ',origin,phase-data,',
+    'tz': None,
+    'updated': 1748674147040,
+    'url': 'https://earthquake.usgs.gov/earthquakes/eventpage/us6000qgwk'}},
+  {'type': 'Feature',
+   'geometry': {'type': 'Point', 'coordinates': [-73.0647, 6.7993]},
+   'id': '00070000000000003800',
+   'properties': {'alert': '',
+    'cdi': None,
+    'code': '6000pjzy',
+    'detail': 'https://earthquake.usgs.gov/fdsnws/event/1/query?eventid=us6000pjzy&amp;format=geojson',
+    'dmin': 0.9010000228881836,
+    'felt': None,
+    'gap': 97,
+    'ids': ',us6000pjzy,',
+    'mag': 4.199999809265137,
+    'magType': 'mb',
+    'mmi': None,
+    'net': 'us',
+    'nst': 13,
+    'place': '8 km NNE of Jordán, Colombia',
+    'rms': 0.5899999737739563,
+    'sig': 271,
+    'sources': ',us,',
+    'status': 'reviewed',
+    'system:time_end': 1735832790445,
+    'system:time_start': 1735832790445,
+    'time': 1735832790445,
+    'title': 'M 4.2 - 8 km NNE of Jordán, Colombia',
+    'tsunami': 0,
+    'type': 'earthquake',
+    'types': ',origin,phase-data,',
+    'tz': None,
+    'updated': 1742247257040,
+    'url': 'https://earthquake.usgs.gov/earthquakes/eventpage/us6000pjzy'}},
+  {'type': 'Feature',
+   'geometry': {'type': 'Point', 'coordinates': [-73.0956, 7.115900000000001]},
+   'id': '0007000000000000c26f',
+   'properties': {'alert': '',
+    'cdi': None,
+    'code': '6000q6rh',
+    'detail': 'https://earthquake.usgs.gov/fdsnws/event/1/query?eventid=us6000q6rh&amp;format=geojson',
+    'dmin': 3.005000114440918,
+    'felt': None,
+    'gap': 233,
+    'ids': ',us6000q6rh,',
+    'mag': 4.199999809265137,
+    'magType': 'mb',
+    'mmi': None,
+    'net': 'us',
+    'nst': 33,
+    'place': '2 km ESE of Bucaramanga, Colombia',
+    'rms': 0.8500000238418579,
+    'sig': 271,
+    'sources': ',us,',
+    'status': 'reviewed',
+    'system:time_end': 1743921490371,
+    'system:time_start': 1743921490371,
+    'time': 1743921490371,
+    'title': 'M 4.2 - 2 km ESE of Bucaramanga, Colombia',
+    'tsunami': 0,
+    'type': 'earthquake',
+    'types': ',origin,phase-data,',
+    'tz': None,
+    'updated': 1745396122040,
+    'url': 'https://earthquake.usgs.gov/earthquakes/eventpage/us6000q6rh'}},
+  {'type': 'Feature',
+   'geometry': {'type': 'Point', 'coordinates': [-73.1015, 6.8782]},
+   'id': '0007000000000000c385',
+   'properties': {'alert': '',
+    'cdi': None,
+    'code': '6000px4q',
+    'detail': 'https://earthquake.usgs.gov/fdsnws/event/1/query?eventid=us6000px4q&amp;format=geojson',
+    'dmin': 0.9789999723434448,
+    'felt': None,
+    'gap': 96,
+    'ids': ',us6000px4q,',
+    'mag': 4.199999809265137,
+    'magType': 'mb',
+    'mmi': None,
+    'net': 'us',
+    'nst': 11,
+    'place': '13 km SSW of Piedecuesta, Colombia',
+    'rms': 0.8100000023841858,
+    'sig': 271,
+    'sources': ',us,',
+    'status': 'reviewed',
+    'system:time_end': 1741221109019,
+    'system:time_start': 1741221109019,
+    'time': 1741221109019,
+    'title': 'M 4.2 - 13 km SSW of Piedecuesta, Colombia',
+    'tsunami': 0,
+    'type': 'earthquake',
+    'types': ',origin,phase-data,',
+    'tz': None,
+    'updated': 1747416601040,
+    'url': 'https://earthquake.usgs.gov/earthquakes/eventpage/us6000px4q'}},
+  {'type': 'Feature',
+   'geometry': {'type': 'Point', 'coordinates': [-72.8631, 7.1274]},
+   'id': '000700000000000037d8',
+   'properties': {'alert': '',
+    'cdi': None,
+    'code': '6000pisv',
+    'detail': 'https://earthquake.usgs.gov/fdsnws/event/1/query?eventid=us6000pisv&amp;format=geojson',
+    'dmin': 1.246000051498413,
+    'felt': None,
+    'gap': 35,
+    'ids': ',us6000pisv,',
+    'mag': 4.300000190734863,
+    'magType': 'mb',
+    'mmi': None,
+    'net': 'us',
+    'nst': 64,
+    'place': '13 km SE of Tona, Colombia',
+    'rms': 0.7599999904632568,
+    'sig': 284,
+    'sources': ',us,',
+    'status': 'reviewed',
+    'system:time_end': 1736393621557,
+    'system:time_start': 1736393621557,
+    'time': 1736393621557,
+    'title': 'M 4.3 - 13 km SE of Tona, Colombia',
+    'tsunami': 0,
+    'type': 'earthquake',
+    'types': ',origin,phase-data,',
+    'tz': None,
+    'updated': 1742504092040,
+    'url': 'https://earthquake.usgs.gov/earthquakes/eventpage/us6000pisv'}},
+  {'type': 'Feature',
+   'geometry': {'type': 'Point', 'coordinates': [-72.9498, 6.6999]},
+   'id': '0007000000000000c2bd',
+   'properties': {'alert': '',
+    'cdi': None,
+    'code': '7000pmup',
+    'detail': 'https://earthquake.usgs.gov/fdsnws/event/1/query?eventid=us7000pmup&amp;format=geojson',
+    'dmin': 0.8130000233650208,
+    'felt': None,
+    'gap': 39,
+    'ids': ',us7000pmup,',
+    'mag': 4.300000190734863,
+    'magType': 'mb',
+    'mmi': None,
+    'net': 'us',
+    'nst': 74,
+    'place': '6 km SSE of Cepitá, Colombia',
+    'rms': 0.75,
+    'sig': 284,
+    'sources': ',us,',
+    'status': 'reviewed',
+    'system:time_end': 1743009321119,
+    'system:time_start': 1743009321119,
+    'time': 1743009321119,
+    'title': 'M 4.3 - 6 km SSE of Cepitá, Colombia',
+    'tsunami': 0,
+    'type': 'earthquake',
+    'types': ',origin,phase-data,',
+    'tz': None,
+    'updated': 1749244344040,
+    'url': 'https://earthquake.usgs.gov/earthquakes/eventpage/us7000pmup'}},
+  {'type': 'Feature',
+   'geometry': {'type': 'Point', 'coordinates': [-73.0438, 6.7029]},
+   'id': '0007000000000000c2cc',
+   'properties': {'alert': '',
+    'cdi': None,
+    'code': '6000q3pn',
+    'detail': 'https://earthquake.usgs.gov/fdsnws/event/1/query?eventid=us6000q3pn&amp;format=geojson',
+    'dmin': 0.8059999942779541,
+    'felt': None,
+    'gap': 39,
+    'ids': ',us6000q3pn,',
+    'mag': 4.400000095367432,
+    'magType': 'mb',
+    'mmi': None,
+    'net': 'us',
+    'nst': 42,
+    'place': '2 km WNW of Aratoca, Colombia',
+    'rms': 0.7300000190734863,
+    'sig': 298,
+    'sources': ',us,',
+    'status': 'reviewed',
+    'system:time_end': 1742852625839,
+    'system:time_start': 1742852625839,
+    'time': 1742852625839,
+    'title': 'M 4.4 - 2 km WNW of Aratoca, Colombia',
+    'tsunami': 0,
+    'type': 'earthquake',
+    'types': ',origin,phase-data,',
+    'tz': None,
+    'updated': 1748540185040,
+    'url': 'https://earthquake.usgs.gov/earthquakes/eventpage/us6000q3pn'}},
+  {'type': 'Feature',
+   'geometry': {'type': 'Point', 'coordinates': [-73.0557, 6.728200000000001]},
+   'id': '000700000000000036fe',
+   'properties': {'alert': '',
+    'cdi': None,
+    'code': '7000pbxz',
+    'detail': 'https://earthquake.usgs.gov/fdsnws/event/1/query?eventid=us7000pbxz&amp;format=geojson',
+    'dmin': 0.8309999704360962,
+    'felt': None,
+    'gap': 61,
+    'ids': ',us7000pbxz,',
+    'mag': 4.5,
+    'magType': 'mb',
+    'mmi': None,
+    'net': 'us',
+    'nst': 43,
+    'place': '4 km E of Jordán, Colombia',
+    'rms': 0.5099999904632568,
+    'sig': 312,
+    'sources': ',us,',
+    'status': 'reviewed',
+    'system:time_end': 1738875802973,
+    'system:time_start': 1738875802973,
+    'time': 1738875802973,
+    'title': 'M 4.5 - 4 km E of Jordán, Colombia',
+    'tsunami': 0,
+    'type': 'earthquake',
+    'types': ',origin,phase-data,',
+    'tz': None,
+    'updated': 1745678823040,
+    'url': 'https://earthquake.usgs.gov/earthquakes/eventpage/us7000pbxz'}},
+  {'type': 'Feature',
+   'geometry': {'type': 'Point', 'coordinates': [-73.1248, 6.686800000000001]},
+   'id': '0007000000000000375c',
+   'properties': {'alert': '',
+    'cdi': None,
+    'code': '6000pmg0',
+    'detail': 'https://earthquake.usgs.gov/fdsnws/event/1/query?eventid=us6000pmg0&amp;format=geojson',
+    'dmin': 0.7900000214576721,
+    'felt': None,
+    'gap': 81,
+    'ids': ',us6000pmg0,',
+    'mag': 4.5,
+    'magType': 'mb',
+    'mmi': None,
+    'net': 'us',
+    'nst': 43,
+    'place': '5 km ENE of Villanueva, Colombia',
+    'rms': 0.44999998807907104,
+    'sig': 312,
+    'sources': ',us,',
+    'status': 'reviewed',
+    'system:time_end': 1737905550833,
+    'system:time_start': 1737905550833,
+    'time': 1737905550833,
+    'title': 'M 4.5 - 5 km ENE of Villanueva, Colombia',
+    'tsunami': 0,
+    'type': 'earthquake',
+    'types': ',origin,phase-data,',
+    'tz': None,
+    'updated': 1744149660040,
+    'url': 'https://earthquake.usgs.gov/earthquakes/eventpage/us6000pmg0'}},
+  {'type': 'Feature',
+   'geometry': {'type': 'Point',
+    'coordinates': [-73.16060000000002, 6.725099999999999]},
+   'id': '000700000000000036bb',
+   'properties': {'alert': '',
+    'cdi': None,
+    'code': '7000pe90',
+    'detail': 'https://earthquake.usgs.gov/fdsnws/event/1/query?eventid=us7000pe90&amp;format=geojson',
+    'dmin': 0.8309999704360962,
+    'felt': None,
+    'gap': 82,
+    'ids': ',us7000pe90,',
+    'mag': 4.599999904632568,
+    'magType': 'mb',
+    'mmi': None,
+    'net': 'us',
+    'nst': 79,
+    'place': '6 km NNE of Villanueva, Colombia',
+    'rms': 0.6600000262260437,
+    'sig': 326,
+    'sources': ',us,',
+    'status': 'reviewed',
+    'system:time_end': 1739807300623,
+    'system:time_start': 1739807300623,
+    'time': 1739807300623,
+    'title': 'M 4.6 - 6 km NNE of Villanueva, Colombia',
+    'tsunami': 0,
+    'type': 'earthquake',
+    'types': ',origin,phase-data,',
+    'tz': None,
+    'updated': 1746203180040,
+    'url': 'https://earthquake.usgs.gov/earthquakes/eventpage/us7000pe90'}}]}</code></pre>
+</div>
+</div>
+<div id="31c4df81-b56e-4d70-afc9-e75cdcb9abba" class="cell" data-execution_count="40">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Save GeoTIFF</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>archivo <span class="op">=</span> <span class="st">'../outputs/stder_sismos25.geojson'</span></span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>save_table(sismos25, filename<span class="op">=</span>archivo)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Saved image</code></pre>
+<pre><code>Saved table to ../outputs/stder_sismos25.geojson</code></pre>
 </div>
 </div>
-<div id="79e4e6a0-b190-4fcb-a531-3e6346547188" class="cell">
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get geometry coordinates for all counties (this is a MultiPolygon object)</span></span>
-<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>region_geom <span class="op">=</span> region.geometry().getInfo()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div id="32f7d73f-0bd5-49e0-aa0a-b701bf7d6d58" class="cell" data-execution_count="154">
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Read saved geotiff image</span></span>
-<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>max_fire_raster <span class="op">=</span> xr.open_dataarray(max_fire_filename).squeeze()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div id="6ddedf93-d6bd-4396-a22a-2e8241722ebf" class="cell" data-execution_count="155">
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Paletter of colors for the Enhanced Vegetation Index</span></span>
-<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>hex_palette <span class="op">=</span> [<span class="st">'#ffffff'</span>,<span class="st">'#ff0000'</span>]</span>
-<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Use the built-in ListedColormap function to do the conversion</span></span>
-<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>cmap <span class="op">=</span> colors.ListedColormap(hex_palette)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div id="478e3b7c-e4f4-4b24-acd2-80d31ad6bb30" class="cell" data-execution_count="160">
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create figure</span></span>
-<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>max_fire_raster.plot.imshow(figsize<span class="op">=</span>(<span class="dv">6</span>,<span class="dv">4</span>), cmap<span class="op">=</span>cmap, add_colorbar<span class="op">=</span><span class="va">False</span>)</span>
+<div id="49c8c634-bd7d-4dec-97ee-3dbb23a4839a" class="cell" data-execution_count="44">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> geopandas <span class="im">as</span> gpd</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> r <span class="kw">in</span> region_geom[<span class="st">'coordinates'</span>]:</span>
-<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>    lon,lat <span class="op">=</span> <span class="bu">zip</span>(<span class="op">*</span>r[<span class="dv">0</span>])</span>
-<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>    plt.plot(<span class="bu">list</span>(lon), <span class="bu">list</span>(lat), linestyle<span class="op">=</span><span class="st">'-'</span>, linewidth<span class="op">=</span><span class="dv">1</span>, color<span class="op">=</span><span class="st">'grey'</span>)</span>
-<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Region with multiple large wildfires in 2017'</span>)</span>
-<span id="cb45-9"><a href="#cb45-9" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Longitude'</span>)</span>
-<span id="cb45-10"><a href="#cb45-10" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Latitude'</span>)</span>
-<span id="cb45-11"><a href="#cb45-11" aria-hidden="true" tabindex="-1"></a><span class="co">#plt.axis('equal')</span></span>
-<span id="cb45-12"><a href="#cb45-12" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
-<span id="cb45-13"><a href="#cb45-13" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Earthquakes from file you exported before</span></span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>gdf_eq <span class="op">=</span> gpd.read_file(<span class="st">"../outputs/stder_sismos25.geojson"</span>)</span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Export region separately as GeoJSON, then read:</span></span>
+<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-9"><a href="#cb45-9" aria-hidden="true" tabindex="-1"></a>gdf_region <span class="op">=</span> gpd.read_file(<span class="st">"../outputs/stder.geojson"</span>)</span>
+<span id="cb45-10"><a href="#cb45-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-11"><a href="#cb45-11" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">6</span>, <span class="dv">6</span>))</span>
+<span id="cb45-12"><a href="#cb45-12" aria-hidden="true" tabindex="-1"></a>gdf_region.boundary.plot(ax<span class="op">=</span>ax, color<span class="op">=</span><span class="st">"red"</span>, linewidth<span class="op">=</span><span class="dv">2</span>)  <span class="co"># outline of region</span></span>
+<span id="cb45-13"><a href="#cb45-13" aria-hidden="true" tabindex="-1"></a>gdf_eq.plot(ax<span class="op">=</span>ax, markersize<span class="op">=</span><span class="dv">5</span>, alpha<span class="op">=</span><span class="fl">0.5</span>)</span>
+<span id="cb45-14"><a href="#cb45-14" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="reduce_image_collection_to_image_files/figure-html/cell-37-output-1.png" class="img-fluid figure-img"></p>
+<p><img src="reduce_image_collection_to_image_files/figure-html/cell-35-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -1222,7 +1766,7 @@ Note
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="reduce_image_collection_to_image_files/figure-html/cell-44-output-1.png" class="img-fluid figure-img"></p>
+<p><img src="reduce_image_collection_to_image_files/figure-html/cell-42-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -1349,7 +1893,7 @@ Note
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="reduce_image_collection_to_image_files/figure-html/cell-50-output-1.png" class="img-fluid figure-img"></p>
+<p><img src="reduce_image_collection_to_image_files/figure-html/cell-48-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -1418,7 +1962,7 @@ Note
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="reduce_image_collection_to_image_files/figure-html/cell-57-output-1.png" class="img-fluid figure-img"></p>
+<p><img src="reduce_image_collection_to_image_files/figure-html/cell-55-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
